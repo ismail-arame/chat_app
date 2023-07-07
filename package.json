@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "http-errors": "^2.0.0",
+    "mongoose": "^7.3.2",
+    "trim-request": "^1.0.6",
+    "winston": "^3.9.0"
+  }
+}
