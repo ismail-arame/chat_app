@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "redux-persist-transform-filter": "^0.0.22"
+  }
+}
