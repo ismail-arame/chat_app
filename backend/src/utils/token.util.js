@@ -8,6 +8,7 @@ exports.sign = async (payload, expiresIn, secret) => {
       secret,
       {
         expiresIn: expiresIn,
+        algorithm: "HS256",
       },
       (error, token) => {
         if (error) {

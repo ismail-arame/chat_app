@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as jose from "jose"; //
 import { verifyAuth } from "./lib/auth";
 
 export async function middleware(req: NextRequest) {
@@ -12,11 +11,18 @@ export async function middleware(req: NextRequest) {
       console.log(err);
     }));
 
-  if (req.nextUrl.pathname.startsWith("/login") && !verifiedToken) {
+  if (
+    (req.nextUrl.pathname.startsWith("/login") ||
+      req.nextUrl.pathname.startsWith("/register")) &&
+    !verifiedToken
+  ) {
     return;
   }
 
-  if (req.url.includes("/login") && verifiedToken) {
+  if (
+    (req.url.includes("/login") || req.url.includes("/register")) &&
+    verifiedToken
+  ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -26,5 +32,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login"],
+  matcher: ["/", "/login", "/register"],
 };
