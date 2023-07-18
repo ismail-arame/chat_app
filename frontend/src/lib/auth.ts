@@ -22,8 +22,6 @@ export const verifyAuth = async (token: string) => {
       { algorithms: ["HS256"] }
     );
 
-    // console.log("token : ", token);
-    // console.log(verified);
     return verified.payload as tokenType;
   } catch (error: any) {
     throw new Error(error);

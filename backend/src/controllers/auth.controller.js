@@ -2,6 +2,7 @@ const createHttpError = require("http-errors");
 const { createUser, signUser } = require("../services/auth.service");
 const { generateToken, verifyToken } = require("../services/token.service");
 const { findUser } = require("../services/user.service");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res, next) => {
   try {

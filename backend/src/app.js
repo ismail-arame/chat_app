@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 const morgan = require("morgan");
 const helmet = require("helmet");
-const mongoSanitize = require("express-mongo-sanitize");
+const mongoSanitize = require("express-mongo-sanitize"); //no sql innjection
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const fileUpload = require("express-fileupload");
@@ -45,7 +45,8 @@ app.use(
 );
 
 //Cross-Origin Resource Sharing
-app.use(cors());
+//Allow requests from localhost:3000
+app.use(cors({ origin: "http://localhost:3000" }));
 
 //routes
 app.use("/", routes);
