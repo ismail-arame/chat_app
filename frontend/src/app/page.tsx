@@ -1,5 +1,6 @@
 "use client";
 
+import { Sidebar } from "@/components/sidebar";
 import { logout } from "@/redux/features/userSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import axios from "axios";
@@ -18,9 +19,12 @@ export default function Home() {
     router.push("/login");
   };
   return (
-    <div>
-      <button onClick={handleLogout}>LogOut</button>
-      <h1>welcome Home</h1>
+    <div className="min-h-screen dark:bg-dark_bg_1 flex items-center justify-center py-[19px] overflow-hidden">
+      {/* Container */}
+      <div className="container min-h-screen flex">
+        {/* Sidebar */}
+        <Sidebar />
+      </div>
     </div>
   );
 }

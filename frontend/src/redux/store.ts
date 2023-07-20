@@ -8,6 +8,7 @@ import userSlice from "./features/userSlice";
 // Storage
 // import storage from "redux-persist/lib/storage"; //doesn't work anymore instead use the code below
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+import chatSlice from "./features/chatSlice";
 
 const createNoopStorage = () => {
   return {
@@ -41,6 +42,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userSlice,
+  chat: chatSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
