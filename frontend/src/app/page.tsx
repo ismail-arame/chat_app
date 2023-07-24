@@ -8,7 +8,7 @@ import { useEffect } from "react";
 export default function Home() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  console.log("user ===> ", user);
+  // console.log("user ===> ", user);
 
   //Get Conversations
   useEffect(() => {
