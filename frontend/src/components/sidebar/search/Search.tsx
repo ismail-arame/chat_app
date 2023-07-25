@@ -1,7 +1,7 @@
 "use client";
 
 import { FilterIcon, ReturnIcon, SearchIcon } from "@/app/svg";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import debounce from "lodash.debounce";
 import axios from "axios";
 import { useAppSelector } from "@/redux/hooks";
@@ -20,10 +20,15 @@ export default function Search({ searchLength, setSearchResults }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const handleClearInput = () => {
+    if (searchInputRef.current) {
+      searchInputRef.current.value = ""; // Clear the input value to an empty string
+    }
+  };
+
   const sendSearchRequest = async (query: string) => {
     try {
-      // console.log(query);
-      // console.log(token);
       if (query) {
         setLoading(true);
         const { data } = await axios.get(
@@ -61,9 +66,6 @@ export default function Search({ searchLength, setSearchResults }: Props) {
     const target = e.target as HTMLInputElement;
     console.log(target.value);
     setSearchQuery(target.value);
-    // if (e.key === "Enter") {
-    //   console.log("Just Clicked Enter");
-    // }
   };
   return (
     <div className="h-[49px] py-1.5">
@@ -73,7 +75,15 @@ export default function Search({ searchLength, setSearchResults }: Props) {
         <div className="flex items-center gap-x-2">
           <div className="flex w-full items-center rounded-lg pl-2 dark:bg-dark_bg_2">
             {show || searchLength > 0 ? (
-              <span className="rotateAnimation flex w-8 items-center justify-center">
+              <span
+                className="rotateAnimation flex w-8 cursor-pointer items-center justify-center"
+                onClick={() => {
+                  handleClearInput();
+                  setSearchResults([]);
+                  setShow(false);
+                  setSearchQuery("");
+                }}
+              >
                 <ReturnIcon className="w-5 fill-green_1" />
               </span>
             ) : (
@@ -88,6 +98,7 @@ export default function Search({ searchLength, setSearchResults }: Props) {
               onFocus={() => setShow(true)}
               onBlur={() => searchLength === 0 && setShow(false)}
               onChange={(e) => handleSearch(e)}
+              ref={searchInputRef}
             />
             {loading && (
               <div

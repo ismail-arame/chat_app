@@ -17,24 +17,12 @@ export default function Home() {
     }
   }, [user]);
   return (
-    <div className="min-h-screen dark:bg-dark_bg_1 flex items-center justify-center py-[19px] overflow-hidden">
+    <div className="flex h-screen items-center justify-center overflow-hidden py-[19px] dark:bg-dark_bg_1">
       {/* Container */}
-      <div className="container min-h-screen flex">
+      <div className="container flex h-screen">
         {/* Sidebar */}
         <Sidebar />
       </div>
     </div>
   );
 }
-
-// import { logout } from "@/redux/features/userSlice";
-// import axios from "axios";
-// import Cookies from "js-cookie";
-// import { useRouter } from "next/navigation";
-// const router = useRouter();
-// const handleLogout = async () => {
-//   dispatch(logout());
-//   Cookies.remove("usertoken");
-//   await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/logout`);
-//   router.push("/login");
-// };

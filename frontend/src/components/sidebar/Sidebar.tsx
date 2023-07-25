@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { SidebarHeader } from "./header";
 import { Notifications } from "./notifications";
-import { Search } from "./search";
+import { Search, SearchResults } from "./search";
 import { Conversations } from "./conversations";
 
 type Props = {};
@@ -12,7 +12,7 @@ export default function Sidebar({}: Props) {
   const [searchResults, setSearchResults] = useState([]);
   console.log(searchResults);
   return (
-    <div className="w-[40%] h-full select-none">
+    <div className="h-full w-[40%] select-none">
       {/* Sidebar Header */}
       <SidebarHeader />
       {/* Notifications */}
@@ -22,8 +22,17 @@ export default function Sidebar({}: Props) {
         searchLength={searchResults.length}
         setSearchResults={setSearchResults}
       />
-      {/* Conversations */}
-      <Conversations />
+      {searchResults.length > 0 ? (
+        <>
+          {/* Search user results */}
+          <SearchResults searchResults={searchResults} />
+        </>
+      ) : (
+        <>
+          {/* Conversations */}
+          <Conversations />
+        </>
+      )}
     </div>
   );
 }

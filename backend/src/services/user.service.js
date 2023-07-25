@@ -9,10 +9,12 @@ exports.findUser = async (userId) => {
   return user;
 };
 
-exports.searchUsersService = async (keyword) => {
-  // perform a search in the UserModel using a regular expression (regex) to find users whose name matches the provided keyword case-insensitively.
+exports.searchUsersService = async (keyword, userId) => {
+  // perform a search in the UserModel using a regular expression (regex) to find users whose name matches the provided keyword case-insensitively and then remove the result which has the logged in user id
   const users = await UserModel.find({
     name: { $regex: keyword, $options: "i" },
+  }).find({
+    _id: { $ne: userId },
   });
   return users;
 };
