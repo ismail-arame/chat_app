@@ -3,11 +3,14 @@
 @tailwind utilities;
 
 @layer components {
-  .container {
+  .app_container {
     @apply h-full w-[1700px];
   }
   .btn {
     @apply flex h-[40px] w-[40px] items-center justify-center rounded-full active:bg-dark_hover_1;
+  }
+  .btn_tablet {
+    @apply flex h-[33px] w-[33px] items-center justify-center rounded-full active:bg-dark_hover_1;
   }
   .px16 {
     @apply px-[16px];
@@ -25,8 +28,18 @@
   .input {
     @apply w-full flex-1 rounded-lg p-1.5 outline-none dark:bg-dark_bg_2 dark:text-dark_text_1;
   }
+  .input_tablet {
+    @apply w-full flex-1 rounded-lg p-1.5 text-sm outline-none dark:bg-dark_bg_2 dark:text-dark_text_1;
+  }
   .convos {
     height: calc(100vh - 220px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  .overflow_scrollbar {
+    /* left a space for chat messages input */
+    /* height: calc(100vh - 155px); */
+    height: calc(100vh - 122px);
     overflow-y: scroll;
     overflow-x: hidden;
   }
@@ -68,12 +81,10 @@
 @keyframes scaleDownLeft {
   0% {
     opacity: 0;
-    transform-origin: top right;
     transform: scale(0);
   }
   100% {
     opacity: 1;
-    transform-origin: bottom left;
     transform: scale(1);
   }
 }

@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   showMenu: boolean;
+  isTablet: boolean;
 };
 
-export default function Menu({ showMenu }: Props) {
+export default function Menu({ showMenu, isTablet }: Props) {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -21,9 +22,9 @@ export default function Menu({ showMenu }: Props) {
 
   return (
     <div
-      className={`absolute right-1 z-50 w-52 rounded-[4px] text-[15px] shadow-md dark:bg-dark_bg_2 dark:text-dark_text_1 ${
+      className={`absolute right-1 z-50 rounded-[4px] shadow-md dark:bg-dark_bg_2 dark:text-dark_text_1 ${
         showMenu ? "open_menu" : ""
-      }`}
+      } ${isTablet ? "w-48 text-sm" : "w-52 text-[15px]"}`}
     >
       <ul>
         <li className="hover: cursor-pointer py-3 pl-5 hover:bg-dark_bg_3">

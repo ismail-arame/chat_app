@@ -1,16 +1,49 @@
+import {
+  getCreatedUserConversation,
+  open_create_conversation,
+} from "@/redux/features/chatSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { userType } from "@/types/userType";
+
 type Props = {
-  contact: any;
+  contact: userType;
+  isTablet: boolean;
 };
 
-export default function Contact({ contact }: Props) {
+type valuesType = {
+  receiver_id: string;
+  token: string;
+};
+
+export default function Contact({ contact, isTablet }: Props) {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
+  const token = user.access_token;
+  const values: valuesType = {
+    receiver_id: contact._id,
+    token,
+  };
+  const createConversation = async () => {
+    await dispatch(open_create_conversation(values));
+    dispatch(getCreatedUserConversation(values));
+  };
   return (
-    <li className="h-[72px] cursor-pointer list-none px-[10px] dark:text-dark_text_1 hover:dark:bg-dark_bg_2">
+    <li
+      onClick={() => createConversation()}
+      className="h-[72px] cursor-pointer list-none px-[10px] dark:text-dark_text_1 hover:dark:bg-dark_bg_2"
+    >
       {/* Container */}
       <div className="flex items-center gap-x-3 py-[10px]">
         {/* Contact Infos */}
         <div className="flex items-center gap-x-3">
           {/* Conversation user picture */}
-          <div className="relative h-[50px] min-w-[50px] max-w-[50px] overflow-hidden rounded-full">
+          <div
+            className={`relative overflow-hidden rounded-full ${
+              isTablet
+                ? "h-[42px] min-w-[42px] max-w-[42px]"
+                : "h-[50px] min-w-[50px] max-w-[50px]"
+            }`}
+          >
             <img
               src={contact.picture}
               alt={contact.name}
@@ -20,10 +53,20 @@ export default function Contact({ contact }: Props) {
           {/* Conversation name and Status*/}
           <div className="flex w-full flex-col">
             {/* contact name */}
-            <h1 className="flex items-center gap-x-2">{contact.name}</h1>
+            <h1
+              className={`flex items-center gap-x-2 ${
+                isTablet ? "text-[15px]" : ""
+              }`}
+            >
+              {contact.name}
+            </h1>
 
             {/* contact Status */}
-            <div className="flex items-center gap-x-1 text-sm dark:text-dark_text_2">
+            <div
+              className={`flex items-center gap-x-1 dark:text-dark_text_2 ${
+                isTablet ? "text-[13px]" : "text-sm"
+              }`}
+            >
               <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
                 <p>{contact.status}</p>
               </div>

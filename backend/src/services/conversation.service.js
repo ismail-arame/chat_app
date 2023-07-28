@@ -78,6 +78,35 @@ exports.getUserConversations = async (user_id) => {
   return conversations;
 };
 
+exports.getUserConversation = async (sender_id, receiver_id) => {
+  let conversation;
+  console.log(sender_id, receiver_id);
+  await ConversationModel.findOne({
+    isGroup: false,
+    //searching for multiple things in the users array
+    $and: [
+      { users: { $elemMatch: { $eq: sender_id } } },
+      { users: { $elemMatch: { $eq: receiver_id } } },
+    ],
+  })
+    .populate("users", "-password")
+    .populate("admin", "-password")
+    .populate("latestMessage")
+    .then(async (result) => {
+      result = await UserModel.populate(result, {
+        path: "latestMessage.sender",
+        select: "name email picture status",
+      });
+      conversation = result;
+    })
+    .catch((error) => {
+      throw createHttpError.BadRequest("Something went wrong");
+    });
+
+  console.log("convo : ", conversation);
+  return conversation;
+};
+
 exports.updatedLatestMessage = async (conversation_id, newMessage) => {
   const updatedConversation = await ConversationModel.findByIdAndUpdate(
     conversation_id,

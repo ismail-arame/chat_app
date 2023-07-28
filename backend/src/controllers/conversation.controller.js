@@ -5,6 +5,7 @@ const {
   createConversation,
   populateConversation,
   getUserConversations,
+  getUserConversation,
 } = require("../services/conversation.service");
 const { findUser } = require("../services/user.service");
 
@@ -62,6 +63,31 @@ exports.getConversations = async (req, res, next) => {
     const user_id = req.user.userId;
     const conversations = await getUserConversations(user_id);
     res.status(200).json(conversations);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getCreatedUserConversation = async (req, res, next) => {
+  try {
+    //authMiddleware passes the user's decoded_token to req.user
+    const sender_id = req.user.userId;
+    //the user that we will start the conversation with
+    const receiver_id = req.params.receiver_id;
+    console.log(receiver_id);
+
+    //check if receiver id is provided
+    if (!receiver_id) {
+      logger.error("Please Provide the receive id to start a conversation");
+      throw createHttpError.BadRequest(
+        "you cannot start a conversation with nobody!"
+      );
+    }
+
+    const conversation = await getUserConversation(sender_id, receiver_id);
+    console.log("backend convo : ", conversation);
+    // return conversation;
+    res.status(200).json(conversation);
   } catch (error) {
     next(error);
   }

@@ -25,7 +25,9 @@ import LockIcon from "./Lock";
 import CallIcon from "./Call";
 import MuteIcon from "./Mute";
 import NoVideoIcon from "./NoVideo";
+import TriangleIcon from "./Triangle";
 export {
+  TriangleIcon,
   CommunityIcon,
   StoryIcon,
   ChatIcon,

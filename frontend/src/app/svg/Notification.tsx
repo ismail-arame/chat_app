@@ -1,11 +1,14 @@
 import { classNameType } from "@/types/classnameType";
 
-export default function NotificationIcon({ className }: classNameType) {
+export default function NotificationIcon({
+  className,
+  isTablet,
+}: classNameType) {
   return (
     <svg
       viewBox="0 0 48 48"
-      height={48}
-      width={48}
+      height={`${isTablet ? 42 : 48}`}
+      width={`${isTablet ? 42 : 48}`}
       preserveAspectRatio="xMidYMid meet"
       version="1.1"
       x="0px"

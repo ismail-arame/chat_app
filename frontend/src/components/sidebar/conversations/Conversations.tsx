@@ -1,18 +1,25 @@
 import { useAppSelector } from "@/redux/hooks";
 import Conversation from "./Conversation";
+import { conversationType } from "@/types/conversationType";
 
-type Props = {};
+type Props = {
+  isTablet: boolean;
+};
 
-export default function Conversations({}: Props) {
+export default function Conversations({ isTablet }: Props) {
   const { conversations } = useAppSelector((state) => state.chat);
-  console.log(conversations);
+  // console.log(conversations);
   return (
     <div className="convos scrollbar">
       <ul>
         {conversations &&
           conversations.length > 0 &&
-          conversations.map((conversation: any) => (
-            <Conversation conversation={conversation} key={conversation._id} />
+          conversations.map((conversation: conversationType) => (
+            <Conversation
+              conversation={conversation}
+              isTablet={isTablet}
+              key={conversation._id}
+            />
           ))}
       </ul>
     </div>

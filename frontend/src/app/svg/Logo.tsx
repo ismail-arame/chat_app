@@ -1,8 +1,12 @@
-export default function Logo() {
+type Prop = {
+  width?: number;
+};
+
+export default function Logo({ width }: Prop) {
   return (
     <svg
       viewBox="0 0 303 172"
-      width={360}
+      width={width}
       preserveAspectRatio="xMidYMid meet"
       fill="none"
     >

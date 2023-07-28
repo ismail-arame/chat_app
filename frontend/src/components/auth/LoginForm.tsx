@@ -39,12 +39,13 @@ export default function LoginForm({}: Props) {
     if (res.payload.user) {
       Cookies.set("usertoken", res.payload.user.access_token);
       router.push("/");
+      // router.push("/");
     }
   };
   return (
-    <div className="h-screen w-full flex items-center justify-center overflow-hidden">
+    <div className="flex h-screen w-full items-center justify-center overflow-hidden">
       {/* container */}
-      <div className="w-full max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
+      <div className="w-full max-w-md space-y-8 rounded-xl p-10 dark:bg-dark_bg_2">
         {/* Heading */}
         <div className="text-center dark:text-dark_text_1">
           <h2 className="mt-6 text-3xl font-bold">Welcome back</h2>
@@ -73,7 +74,7 @@ export default function LoginForm({}: Props) {
             </div>
           )}
           <button
-            className="w-full flex justify-center bg-green_1 text-gray-100 p-4 rounded-full tracking-wide font-semibold focus:outline-none hover:bg-green_2 shadow-lg cursor-pointer transition ease-in duration-100"
+            className="flex w-full cursor-pointer justify-center rounded-full bg-green_1 p-4 font-semibold tracking-wide text-gray-100 shadow-lg transition duration-100 ease-in hover:bg-green_2 focus:outline-none"
             type="submit"
           >
             {status === "loading" ? (
@@ -83,11 +84,11 @@ export default function LoginForm({}: Props) {
             )}
           </button>
           {/* Sign up link */}
-          <p className="flex flex-col items-center mt-10 text-center text-md dark:text-dark_text_1">
+          <p className="text-md mt-10 flex flex-col items-center text-center dark:text-dark_text_1">
             <span>do not have an account ?</span>
             <Link
               href="/register"
-              className="hover:underline cursor-pointer transition ease-in duration-300"
+              className="cursor-pointer transition duration-300 ease-in hover:underline"
             >
               Sign up
             </Link>

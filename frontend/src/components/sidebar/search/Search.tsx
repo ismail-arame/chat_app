@@ -9,9 +9,14 @@ import { useAppSelector } from "@/redux/hooks";
 type Props = {
   searchLength: number;
   setSearchResults: any;
+  isTablet: boolean;
 };
 
-export default function Search({ searchLength, setSearchResults }: Props) {
+export default function Search({
+  isTablet,
+  searchLength,
+  setSearchResults,
+}: Props) {
   const { user } = useAppSelector((state) => state.user);
   const token = user.access_token;
   // const { token } = user;
@@ -94,7 +99,7 @@ export default function Search({ searchLength, setSearchResults }: Props) {
             <input
               type="text"
               placeholder="Search or start new chat"
-              className="input"
+              className={`${isTablet ? "input_tablet" : "input"}`}
               onFocus={() => setShow(true)}
               onBlur={() => searchLength === 0 && setShow(false)}
               onChange={(e) => handleSearch(e)}

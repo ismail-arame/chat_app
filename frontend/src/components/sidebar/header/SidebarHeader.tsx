@@ -3,20 +3,22 @@
 import { useAppSelector } from "@/redux/hooks";
 import HeaderUserIcons from "./HeaderUserIcons";
 
-type Props = {};
+type Props = {
+  isTablet: boolean;
+};
 
-export default function SidebarHeader({}: Props) {
+export default function SidebarHeader({ isTablet }: Props) {
   const { user } = useAppSelector((state) => state.user);
   return (
-    <div className="h-[50px] dark:bg-dark_bg_2 flex items-center px16">
+    <div className="px16 flex h-[59px] items-center dark:bg-dark_bg_2">
       {/* ***********__ Container __*********** */}
-      <div className="w-full flex items-center justify-between">
+      <div className="flex w-full items-center justify-between">
         {/* ***********__ user image __*********** */}
-        <button className="btn">
+        <button className={`${isTablet ? "btn_tablet" : "btn"}`}>
           <img
             src={user.picture}
             alt={user.name}
-            className="w-full h-full rounded-full object-cover"
+            className="h-full w-full rounded-full object-cover"
           />
           {/* <img
             src="https://res.cloudinary.com/dkd5jblv5/image/upload/v1675976806/Default_ProfilePicture_gjngnb.png"
@@ -25,7 +27,7 @@ export default function SidebarHeader({}: Props) {
           /> */}
         </button>
         {/* ***********__ user icons __*********** */}
-        <HeaderUserIcons />
+        <HeaderUserIcons isTablet={isTablet} />
       </div>
     </div>
   );

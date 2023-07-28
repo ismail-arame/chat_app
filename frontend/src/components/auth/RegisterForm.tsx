@@ -77,9 +77,9 @@ export default function RegisterForm({}: Props) {
     return data;
   };
   return (
-    <div className="w-full flex items-center justify-center overflow-hidden">
+    <div className="flex w-full items-center justify-center overflow-hidden">
       {/* container */}
-      <div className="max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
+      <div className="max-w-md space-y-8 rounded-xl p-10 dark:bg-dark_bg_2">
         {/* Heading */}
         <div className="text-center dark:text-dark_text_1">
           <h2 className="mt-6 text-3xl font-bold">Welcome</h2>
@@ -128,7 +128,7 @@ export default function RegisterForm({}: Props) {
             </div>
           )}
           <button
-            className="w-full flex justify-center bg-green_1 text-gray-100 p-4 rounded-full tracking-wide font-semibold focus:outline-none hover:bg-green_2 shadow-lg cursor-pointer transition ease-in duration-100"
+            className="flex w-full cursor-pointer justify-center rounded-full bg-green_1 p-4 font-semibold tracking-wide text-gray-100 shadow-lg transition duration-100 ease-in hover:bg-green_2 focus:outline-none"
             type="submit"
           >
             {status === "loading" ? (
@@ -138,11 +138,11 @@ export default function RegisterForm({}: Props) {
             )}
           </button>
           {/* Sign in link */}
-          <p className="flex flex-col items-center mt-10 text-center text-md dark:text-dark_text_1">
+          <p className="text-md mt-10 flex flex-col items-center text-center dark:text-dark_text_1">
             <span>have an account ?</span>
             <Link
               href="/login"
-              className="hover:underline cursor-pointer transition ease-in duration-300"
+              className="cursor-pointer transition duration-300 ease-in hover:underline"
             >
               Sign in
             </Link>

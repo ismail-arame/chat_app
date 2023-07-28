@@ -1,29 +1,46 @@
 import { CloseIcon, NotificationIcon } from "@/app/svg";
 import ArrowIcon from "../../../app/svg/Arrow";
 
-type Props = {};
+type Props = { isTablet: boolean };
 
-export default function Notifications({}: Props) {
+export default function Notifications({ isTablet }: Props) {
   return (
-    <div className="h-[90px] dark:bg-dark_bg_3 flex items-center p-[13px]">
+    <div
+      className={`flex items-center p-[13px] dark:bg-dark_bg_3 ${
+        isTablet ? "h-[80px]" : "h-[90px]"
+      }`}
+    >
       {/* Container */}
-      <div className="w-full flex items-center justify-between">
+      <div className="flex w-full items-center justify-between">
         {/* Left Side */}
         <div className="flex items-center gap-x-4">
           <div className="cursor-pointer">
-            <NotificationIcon className="dark:fill-blue_1" />
+            <NotificationIcon
+              className="dark:fill-blue_1"
+              isTablet={isTablet}
+            />
           </div>
           <div className="flex flex-col">
-            <span className="textPrimary">Get notified of new messages</span>
-            <span className="textSecondary mt-0.5 flex items-center gap-0.5">
+            <span
+              className={`${
+                isTablet ? "text-[15px] text-dark_text_1" : "textPrimary"
+              }`}
+            >
+              Get notified of new messages
+            </span>
+            <span
+              className={`mt-0.5 flex items-center gap-0.5 ${
+                isTablet ? "text-[13px] text-dark_text_2" : "textSecondary"
+              }`}
+            >
               Turn on desktop notifications
-              <ArrowIcon className="dark:fill-dark_svg_2 mt-1" />
+              <ArrowIcon className="mt-1 dark:fill-dark_svg_2" />
             </span>
           </div>
         </div>
         {/* Right Side */}
         <div className="cursor-pointer">
-          <CloseIcon className="dark:fill-dark_svg_2" />
+          <CloseIcon className="dark:fill-dark_svg_2" isTablet={isTablet} />
         </div>
       </div>
     </div>

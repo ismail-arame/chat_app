@@ -1,12 +1,12 @@
 import React from "react";
 import { classNameType } from "@/types/classnameType";
 
-export default function CloseIcon({ className }: classNameType) {
+export default function CloseIcon({ className, isTablet }: classNameType) {
   return (
     <svg
       viewBox="0 0 24 24"
-      height={24}
-      width={24}
+      height={`${isTablet ? 21 : 24}`}
+      width={`${isTablet ? 21 : 24}`}
       preserveAspectRatio="xMidYMid meet"
       className={className}
       enableBackground="new 0 0 24 24"
