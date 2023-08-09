@@ -3,8 +3,8 @@ import { classNameType } from "@/types/classnameType";
 function EmojiIcon({ className }: classNameType) {
   return (
     <svg
-      width="28"
-      height="28"
+      width="25"
+      height="25"
       x="0"
       y="0"
       className="ekdr8vow dhq51u3o"

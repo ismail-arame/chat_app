@@ -4,6 +4,7 @@ import {
 } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userType } from "@/types/userType";
+import { capitalize } from "@/utils/string";
 
 type Props = {
   contact: userType;
@@ -58,7 +59,7 @@ export default function Contact({ contact, isTablet }: Props) {
                 isTablet ? "text-[15px]" : ""
               }`}
             >
-              {contact.name}
+              {capitalize(contact.name)}
             </h1>
 
             {/* contact Status */}
@@ -75,7 +76,7 @@ export default function Contact({ contact, isTablet }: Props) {
         </div>
       </div>
       {/* Border */}
-      <div className="ml-16 border-b dark:border-b-dark_border_1"></div>
+      {/* <div className="ml-16 border-b dark:border-b-dark_border_1"></div> */}
     </li>
   );
 }

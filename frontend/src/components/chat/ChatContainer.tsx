@@ -2,17 +2,20 @@ import { ChatHeader, ChatMessages } from "@/components/chat";
 import { getConversationMessages } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect } from "react";
+import { ChatActions } from "./actions";
 
 type Props = {
   isDesktopOrLaptop: boolean;
   isTablet: boolean;
   isPhone: boolean;
+  isSmallPhone: boolean;
 };
 
 export default function ChatContainer({
   isDesktopOrLaptop,
   isTablet,
   isPhone,
+  isSmallPhone,
 }: Props) {
   const dispatch = useAppDispatch();
   const { activeConversation, messages } = useAppSelector(
@@ -39,9 +42,11 @@ export default function ChatContainer({
       {/* Container */}
       <div>
         {/* *_*_*_*_*_*_*_*_ Chat Header _*_*_*_*_*_*_*_* */}
-        <ChatHeader isPhone={isPhone} />
+        <ChatHeader isPhone={isPhone} isSmallPhone={isSmallPhone} />
         {/* *_*_*_*_*_*_*_*_ Chat Messages _*_*_*_*_*_*_*_* */}
         <ChatMessages />
+        {/* *_*_*_*_*_*_*_*_ Chat Actions (Input) _*_*_*_*_*_*_*_* */}
+        <ChatActions />
       </div>
     </div>
   );

@@ -36,6 +36,13 @@ type messageEndpointValuesType = {
   conversation_id: string;
 };
 
+type sendMessageValuesType = {
+  token: string;
+  message: string;
+  conversation_id: string;
+  files: any;
+};
+
 /* _*_*_*_*_*_*_*_*_*_*_* functions *_*_*_*_*_*_*_*_*_*_* _ */
 
 //get conversations function
@@ -120,14 +127,42 @@ export const getConversationMessages = createAsyncThunk(
   }
 );
 
+// send message
+export const sendMessage = createAsyncThunk(
+  "message/send",
+  async (values: sendMessageValuesType, { rejectWithValue }) => {
+    const { token, message, conversation_id, files } = values;
+    try {
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/message`,
+        {
+          message,
+          conversation_id,
+          files,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
+
 /* _*_*_*_*_*_*_*_*_*_*_* functions *_*_*_*_*_*_*_*_*_*_* _ */
 
 export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setActiveConversation: (state, action) => {
+    setActiveConversation: (state, action: PayloadAction<conversationType>) => {
       state.activeConversation = action.payload;
+    },
+    setMessages: (state, action: PayloadAction<messageType[]>) => {
+      state.messages = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -205,8 +240,35 @@ export const chatSlice = createSlice({
       state.status = "failed";
       state.error = action.payload as any;
     });
+    /* ----- send Message ----- */
+    builder.addCase(sendMessage.pending, (state, action) => {
+      state.status = "loading";
+    });
+    builder.addCase(
+      sendMessage.fulfilled,
+      (state, action: PayloadAction<messageType>) => {
+        state.status = "succeeded";
+        state.error = "";
+        state.messages = [...state.messages, action.payload];
+        let conversation = {
+          ...action.payload.conversation,
+          latestMessage: action.payload,
+        };
+        //filtering all conversations that are not this conversation
+        const newConvos = [...state.conversations].filter(
+          (c) => c._id !== conversation._id
+        );
+        //add the latest conversation to the beginning
+        newConvos.unshift(conversation);
+        state.conversations = newConvos;
+      }
+    );
+    builder.addCase(sendMessage.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as any;
+    });
   },
 });
 
-export const { setActiveConversation } = chatSlice.actions;
+export const { setActiveConversation, setMessages } = chatSlice.actions;
 export default chatSlice.reducer;

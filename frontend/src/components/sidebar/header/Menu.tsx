@@ -1,3 +1,4 @@
+import { setActiveConversation } from "@/redux/features/chatSlice";
 import { logout } from "@/redux/features/userSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import axios from "axios";
@@ -18,6 +19,16 @@ export default function Menu({ showMenu, isTablet }: Props) {
     Cookies.remove("usertoken");
     await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/logout`);
     router.push("/login");
+    dispatch(
+      setActiveConversation({
+        _id: "",
+        name: "",
+        picture: "",
+        isGroup: false,
+        users: [],
+        latestMessage: {},
+      })
+    );
   };
 
   return (

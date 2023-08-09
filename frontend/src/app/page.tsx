@@ -30,9 +30,12 @@ export default function Home() {
   const isPhone = useMediaQuery({
     query: "(max-width: 800px)",
   });
+  const isSmallPhone = useMediaQuery({
+    query: "(max-width: 500px)",
+  });
 
   return (
-    <div className="flex h-screen items-center justify-center overflow-hidden py-[19px] dark:bg-dark_bg_1">
+    <div className="flex h-screen items-center justify-center overflow-hidden dark:bg-dark_bg_1">
       {/* Container */}
       <div className="app_container flex h-screen">
         {isPhone && !activeConversation._id ? (
@@ -46,6 +49,7 @@ export default function Home() {
             isDesktopOrLaptop={isDesktopOrLaptop}
             isTablet={isTablet}
             isPhone={isPhone}
+            isSmallPhone={isSmallPhone}
           />
         ) : (
           <>
@@ -61,6 +65,7 @@ export default function Home() {
                 isDesktopOrLaptop={isDesktopOrLaptop}
                 isTablet={isTablet}
                 isPhone={isPhone}
+                isSmallPhone={isSmallPhone}
               />
             ) : (
               <Welcome

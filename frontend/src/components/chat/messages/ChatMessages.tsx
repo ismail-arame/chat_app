@@ -2,6 +2,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { messageType } from "@/types/messageType";
 import Message from "./Message";
 import { useMediaQuery } from "react-responsive";
+import { useEffect, useRef } from "react";
 
 type Props = {};
 
@@ -23,6 +24,12 @@ export default function ChatMessages({}: Props) {
     []
   );
 
+  // scroll to bottom when open a conversation or send a message
+  const endRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="mb-[60px] bg-[url('https://res.cloudinary.com/dmhcnhtng/image/upload/v1677358270/Untitled-1_copy_rpx8yb.jpg')] bg-cover bg-no-repeat">
       {/* Container */}
@@ -42,6 +49,7 @@ export default function ChatMessages({}: Props) {
               isSameSenderAsPrevious={message.isSameSenderAsPrevious!}
             />
           ))}
+        <div ref={endRef}></div>
       </div>
     </div>
   );

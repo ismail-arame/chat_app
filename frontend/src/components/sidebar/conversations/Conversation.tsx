@@ -1,5 +1,6 @@
 import { open_create_conversation } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { userType } from "@/types/userType";
 import { getConversationReceiverId } from "@/utils/chat";
 import { dateHandler } from "@/utils/date";
 import { capitalize } from "@/utils/string";
@@ -24,6 +25,7 @@ export default function Conversation({ conversation, isTablet }: Props) {
   //open conversation because it already exist (we create it if it was in the search)
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { activeConversation } = useAppSelector((state) => state.chat);
   const token = user.access_token;
   const values: valuesType = {
     receiver_id: getConversationReceiverId(user, conversation.users),
@@ -33,10 +35,23 @@ export default function Conversation({ conversation, isTablet }: Props) {
   const openConversation = () => {
     dispatch(open_create_conversation(values));
   };
+
+  //getting reciever infos
+  const receiver = conversation.users.find(
+    (conversationUser: userType) => conversationUser.name !== user.name
+  );
   return (
     <li
       onClick={() => openConversation()}
-      className="h-[72px] w-full cursor-pointer list-none px-[10px] dark:bg-dark_bg_1 dark:text-dark_text_1 hover:dark:bg-dark_bg_2"
+      className={`${
+        isTablet ? "h-[61px]" : "h-[72px]"
+      } w-full cursor-pointer list-none px-[10px] dark:bg-dark_bg_1 dark:text-dark_text_1 hover:${
+        conversation._id === activeConversation._id ? "" : "dark:bg-dark_bg_2"
+      } ${
+        conversation._id === activeConversation._id
+          ? "dark:bg-dark_hover_1"
+          : ""
+      }`}
     >
       {/* Container */}
       <div className="relative flex w-full items-center justify-between py-[10px]">
@@ -64,7 +79,7 @@ export default function Conversation({ conversation, isTablet }: Props) {
                 isTablet ? "text-[15px]" : ""
               }`}
             >
-              {capitalize(conversation.name)}
+              {capitalize(receiver.name)}
             </h1>
 
             {/* conversation latestMessage */}
@@ -103,7 +118,7 @@ export default function Conversation({ conversation, isTablet }: Props) {
         </div>
       </div>
       {/* Border */}
-      <div className="ml-16 border-b dark:border-b-dark_border_1"></div>
+      {/* <div className="ml-16 border-b dark:border-b-dark_border_1"></div> */}
     </li>
   );
 }

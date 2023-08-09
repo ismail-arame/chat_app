@@ -1,12 +1,12 @@
 import React from "react";
 import { classNameType } from "@/types/classnameType";
 
-export default function DotsIcon({ className }: classNameType) {
+export default function DotsIcon({ className, height, width }: classNameType) {
   return (
     <svg
       viewBox="0 0 24 24"
-      height={24}
-      width={24}
+      height={height ? height : 24}
+      width={width ? width : 24}
       preserveAspectRatio="xMidYMid meet"
       version="1.1"
       x="0px"
