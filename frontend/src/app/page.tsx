@@ -7,13 +7,21 @@ import { getConversations } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useSocketContext } from "@/context/SocketContext";
 
 export default function Home() {
+  const socket = useSocketContext();
+  // console.log("socket : , ", socket);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { activeConversation } = useAppSelector((state) => state.chat);
   console.log("activeConversation : ", activeConversation);
   // console.log("user ===> ", user);
+
+  //join user into socket io
+  useEffect(() => {
+    socket.emit("join", user._id);
+  }, [user]);
 
   //Get Conversations
   useEffect(() => {
@@ -33,7 +41,6 @@ export default function Home() {
   const isSmallPhone = useMediaQuery({
     query: "(max-width: 500px)",
   });
-
   return (
     <div className="flex h-screen items-center justify-center overflow-hidden dark:bg-dark_bg_1">
       {/* Container */}
@@ -80,3 +87,5 @@ export default function Home() {
     </div>
   );
 }
+
+// const HomeWithSocket = (props) => {}

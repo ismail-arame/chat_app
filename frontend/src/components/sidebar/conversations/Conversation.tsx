@@ -1,3 +1,4 @@
+import { useSocketContext } from "@/context/SocketContext";
 import { open_create_conversation } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userType } from "@/types/userType";
@@ -17,6 +18,7 @@ type valuesType = {
 };
 
 export default function Conversation({ conversation, isTablet }: Props) {
+  const socket = useSocketContext();
   const latestMessageLength: number =
     conversation?.latestMessage?.message?.length;
 
@@ -32,8 +34,11 @@ export default function Conversation({ conversation, isTablet }: Props) {
     token,
   };
   // console.log("conversation : ", conversation);
-  const openConversation = () => {
-    dispatch(open_create_conversation(values));
+  const openConversation = async () => {
+    let newActiveConversation = await dispatch(
+      open_create_conversation(values)
+    );
+    socket.emit("join conversation", newActiveConversation.payload._id);
   };
 
   //getting reciever infos

@@ -36,7 +36,7 @@ export default function LoginForm({}: Props) {
 
   const onSubmit: SubmitHandler<FormSchemaType> = async (data) => {
     let res = await dispatch(loginUser({ ...data }));
-    if (res.payload.user) {
+    if (res?.payload.user) {
       Cookies.set("usertoken", res.payload.user.access_token);
       router.push("/");
       // router.push("/");

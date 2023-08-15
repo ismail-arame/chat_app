@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+const { Server } = require("socket.io");
 const app = require("./app");
 const logger = require("./configs/logger.config");
+const SocketServer = require("./SocketServer");
 
 //env variables
 const { DATABASE_URL } = process.env;
@@ -30,6 +32,20 @@ let server;
 server = app.listen(PORT, () => {
   logger.info(`Server is listening on port ${PORT}`);
   // throw new Error("server error .");
+});
+
+// socket io
+const io = new Server(server, {
+  // options
+  pingTimeout: 60000,
+  cors: {
+    origin: `${process.env.CLIENT_ENDPOINT}`,
+  },
+});
+
+io.on("connection", (socket) => {
+  logger.info("socket io connected successfully.");
+  SocketServer(socket);
 });
 
 const exitHandler = () => {
