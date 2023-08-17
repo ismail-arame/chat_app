@@ -7,9 +7,10 @@ import { setActiveConversation, setMessages } from "@/redux/features/chatSlice";
 type Props = {
   isPhone: boolean;
   isSmallPhone: boolean;
+  online: boolean;
 };
 
-export default function ChatHeader({ isPhone, isSmallPhone }: Props) {
+export default function ChatHeader({ isPhone, isSmallPhone, online }: Props) {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { activeConversation } = useAppSelector((state) => state.chat);
@@ -72,7 +73,9 @@ export default function ChatHeader({ isPhone, isSmallPhone }: Props) {
               <h1 className="text-md dark:text-white">
                 {capitalize(receiver.name)}
               </h1>
-              <span className="text-xs dark:text-dark_svg_2">online</span>
+              {online && (
+                <span className="text-xs dark:text-dark_svg_2">online</span>
+              )}
             </div>
           </div>
         </div>

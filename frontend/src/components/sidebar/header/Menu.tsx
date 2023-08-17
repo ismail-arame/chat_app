@@ -1,6 +1,8 @@
+import { useSocketContext } from "@/context/SocketContext";
 import { setActiveConversation } from "@/redux/features/chatSlice";
 import { logout } from "@/redux/features/userSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { onlineUsersType } from "@/types/onlineUsersType";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -8,13 +10,25 @@ import { useRouter } from "next/navigation";
 type Props = {
   showMenu: boolean;
   isTablet: boolean;
+  onlineUsers: onlineUsersType[];
+  setOnlineUsers: any;
 };
 
-export default function Menu({ showMenu, isTablet }: Props) {
+export default function Menu({
+  showMenu,
+  isTablet,
+  onlineUsers,
+  setOnlineUsers,
+}: Props) {
+  const socket = useSocketContext();
   const router = useRouter();
   const dispatch = useAppDispatch();
-
+  const { user } = useAppSelector((state) => state.user);
+  const userId = user._id;
   const handleLogout = async () => {
+    //remove the logged out user from the online users
+    socket.emit("leave", userId);
+
     dispatch(logout());
     Cookies.remove("usertoken");
     await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/logout`);

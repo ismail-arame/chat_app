@@ -10,6 +10,7 @@ import moment from "moment";
 type Props = {
   conversation: any;
   isTablet: boolean;
+  online: boolean;
 };
 
 type valuesType = {
@@ -17,7 +18,12 @@ type valuesType = {
   token: string;
 };
 
-export default function Conversation({ conversation, isTablet }: Props) {
+export default function Conversation({
+  conversation,
+  isTablet,
+  online,
+}: Props) {
+  console.log("online", online);
   const socket = useSocketContext();
   const latestMessageLength: number =
     conversation?.latestMessage?.message?.length;
@@ -65,6 +71,8 @@ export default function Conversation({ conversation, isTablet }: Props) {
           {/* Conversation user picture */}
           <div
             className={`relative overflow-hidden rounded-full ${
+              online ? "online" : ""
+            } ${
               isTablet
                 ? "h-[42px] min-w-[42px] max-w-[42px]"
                 : "h-[50px] min-w-[50px] max-w-[50px]"

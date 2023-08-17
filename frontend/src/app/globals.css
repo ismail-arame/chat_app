@@ -51,6 +51,10 @@
     /* display: block; */
     animation: scaleDownLeft 0.3s ease-in-out forwards;
   }
+
+  .online {
+    border: 2px solid #00a884;
+  }
 }
 
 /* ----- animations ----- */

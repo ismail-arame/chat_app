@@ -3,12 +3,15 @@ import { getConversationMessages } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect } from "react";
 import { ChatActions } from "./actions";
+import { onlineUsersType } from "@/types/onlineUsersType";
+import { checkOnlineStatus, getConversationReceiverId } from "@/utils/chat";
 
 type Props = {
   isDesktopOrLaptop: boolean;
   isTablet: boolean;
   isPhone: boolean;
   isSmallPhone: boolean;
+  onlineUsers: onlineUsersType[];
 };
 
 export default function ChatContainer({
@@ -16,6 +19,7 @@ export default function ChatContainer({
   isTablet,
   isPhone,
   isSmallPhone,
+  onlineUsers,
 }: Props) {
   const dispatch = useAppDispatch();
   const { activeConversation, messages } = useAppSelector(
@@ -42,7 +46,15 @@ export default function ChatContainer({
       {/* Container */}
       <div>
         {/* *_*_*_*_*_*_*_*_ Chat Header _*_*_*_*_*_*_*_* */}
-        <ChatHeader isPhone={isPhone} isSmallPhone={isSmallPhone} />
+        <ChatHeader
+          isPhone={isPhone}
+          isSmallPhone={isSmallPhone}
+          online={checkOnlineStatus(
+            onlineUsers,
+            user,
+            activeConversation.users
+          )}
+        />
         {/* *_*_*_*_*_*_*_*_ Chat Messages _*_*_*_*_*_*_*_* */}
         <ChatMessages />
         {/* *_*_*_*_*_*_*_*_ Chat Actions (Input) _*_*_*_*_*_*_*_* */}

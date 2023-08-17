@@ -6,17 +6,22 @@ import { Notifications } from "./notifications";
 import { Search, SearchResults } from "./search";
 import { Conversations } from "./conversations";
 import { useMediaQuery } from "react-responsive";
+import { onlineUsersType } from "@/types/onlineUsersType";
 
 type Props = {
   isDesktopOrLaptop: boolean;
   isTablet: boolean;
   isPhone: boolean;
+  onlineUsers: onlineUsersType[];
+  setOnlineUsers: any;
 };
 
 export default function Sidebar({
   isDesktopOrLaptop,
   isTablet,
   isPhone,
+  onlineUsers,
+  setOnlineUsers,
 }: Props) {
   const [searchResults, setSearchResults] = useState([]);
   // console.log(searchResults);
@@ -28,7 +33,11 @@ export default function Sidebar({
       }`}
     >
       {/* Sidebar Header */}
-      <SidebarHeader isTablet={isTablet} />
+      <SidebarHeader
+        isTablet={isTablet}
+        onlineUsers={onlineUsers}
+        setOnlineUsers={setOnlineUsers}
+      />
       {/* Notifications */}
       {!isPhone && <Notifications isTablet={isTablet} />}
       {/* Search */}
@@ -45,7 +54,7 @@ export default function Sidebar({
       ) : (
         <>
           {/* Conversations */}
-          <Conversations isTablet={isTablet} />
+          <Conversations isTablet={isTablet} onlineUsers={onlineUsers} />
         </>
       )}
     </div>

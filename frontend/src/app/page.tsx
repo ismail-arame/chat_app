@@ -8,9 +8,10 @@ import {
   updateMessagesAndConversations,
 } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useSocketContext } from "@/context/SocketContext";
+import { onlineUsersType } from "@/types/onlineUsersType";
 
 export default function Home() {
   const socket = useSocketContext();
@@ -19,12 +20,15 @@ export default function Home() {
   const { user } = useAppSelector((state) => state.user);
   const userId: string = user._id;
   const { activeConversation } = useAppSelector((state) => state.chat);
-  // console.log("activeConversation : ", activeConversation);
-  // console.log("user ===> ", user);
+  const [onlineUsers, setOnlineUsers] = useState<onlineUsersType[]>([]);
 
   //join user into socket io
   useEffect(() => {
     socket.emit("join", userId);
+    //get online users
+    socket.on("get-online-users", (users: onlineUsersType[]) => {
+      setOnlineUsers([...users]);
+    });
   }, [user]);
 
   //Listening for recieved messages
@@ -62,6 +66,8 @@ export default function Home() {
             isDesktopOrLaptop={isDesktopOrLaptop}
             isTablet={isTablet}
             isPhone={isPhone}
+            onlineUsers={onlineUsers}
+            setOnlineUsers={setOnlineUsers}
           />
         ) : isPhone && activeConversation._id ? (
           <ChatContainer
@@ -69,6 +75,7 @@ export default function Home() {
             isTablet={isTablet}
             isPhone={isPhone}
             isSmallPhone={isSmallPhone}
+            onlineUsers={onlineUsers}
           />
         ) : (
           <>
@@ -77,6 +84,8 @@ export default function Home() {
               isDesktopOrLaptop={isDesktopOrLaptop}
               isTablet={isTablet}
               isPhone={isPhone}
+              onlineUsers={onlineUsers}
+              setOnlineUsers={setOnlineUsers}
             />
             {/* right side */}
             {activeConversation._id ? (
@@ -85,6 +94,7 @@ export default function Home() {
                 isTablet={isTablet}
                 isPhone={isPhone}
                 isSmallPhone={isSmallPhone}
+                onlineUsers={onlineUsers}
               />
             ) : (
               <Welcome

@@ -2,12 +2,19 @@
 
 import { useAppSelector } from "@/redux/hooks";
 import HeaderUserIcons from "./HeaderUserIcons";
+import { onlineUsersType } from "@/types/onlineUsersType";
 
 type Props = {
   isTablet: boolean;
+  setOnlineUsers: any;
+  onlineUsers: onlineUsersType[];
 };
 
-export default function SidebarHeader({ isTablet }: Props) {
+export default function SidebarHeader({
+  isTablet,
+  onlineUsers,
+  setOnlineUsers,
+}: Props) {
   const { user } = useAppSelector((state) => state.user);
   return (
     <div className="px16 flex h-[59px] items-center dark:bg-dark_bg_2">
@@ -27,7 +34,11 @@ export default function SidebarHeader({ isTablet }: Props) {
           /> */}
         </button>
         {/* ***********__ user icons __*********** */}
-        <HeaderUserIcons isTablet={isTablet} />
+        <HeaderUserIcons
+          isTablet={isTablet}
+          onlineUsers={onlineUsers}
+          setOnlineUsers={setOnlineUsers}
+        />
       </div>
     </div>
   );
