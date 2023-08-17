@@ -103,7 +103,7 @@ exports.getUserConversation = async (sender_id, receiver_id) => {
       throw createHttpError.BadRequest("Something went wrong");
     });
 
-  console.log("convo : ", conversation);
+  // console.log("convo : ", conversation);
   return conversation;
 };
 

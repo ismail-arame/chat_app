@@ -13,7 +13,7 @@ export default function ChatHeader({ isPhone, isSmallPhone }: Props) {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { activeConversation } = useAppSelector((state) => state.chat);
-  const { picture } = activeConversation;
+  // const { picture } = activeConversation;
 
   //getting reciever infos
   const receiver = activeConversation.users.find(
@@ -62,7 +62,7 @@ export default function ChatHeader({ isPhone, isSmallPhone }: Props) {
             {/* Conversation image */}
             <button className={`${isSmallPhone ? "btn_small_phone" : "btn"}`}>
               <img
-                src={picture}
+                src={receiver.picture}
                 alt={`${receiver.name} image`}
                 className="h-full w-full rounded-full object-cover"
               />

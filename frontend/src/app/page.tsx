@@ -3,7 +3,10 @@
 import { ChatContainer } from "@/components/chat";
 import { Welcome } from "@/components/chat";
 import { Sidebar } from "@/components/sidebar";
-import { getConversations } from "@/redux/features/chatSlice";
+import {
+  getConversations,
+  updateMessagesAndConversations,
+} from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
@@ -14,13 +17,22 @@ export default function Home() {
   // console.log("socket : , ", socket);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const userId: string = user._id;
   const { activeConversation } = useAppSelector((state) => state.chat);
-  console.log("activeConversation : ", activeConversation);
+  // console.log("activeConversation : ", activeConversation);
   // console.log("user ===> ", user);
 
   //join user into socket io
   useEffect(() => {
-    socket.emit("join", user._id);
+    socket.emit("join", userId);
+  }, [user]);
+
+  //Listening for recieved messages
+  useEffect(() => {
+    socket.on("receive message", (message) => {
+      console.log("client recieved message : ", message);
+      dispatch(updateMessagesAndConversations(message));
+    });
   }, [user]);
 
   //Get Conversations

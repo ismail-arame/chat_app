@@ -1,3 +1,4 @@
+import { useSocketContext } from "@/context/SocketContext";
 import {
   getCreatedUserConversation,
   open_create_conversation,
@@ -17,6 +18,7 @@ type valuesType = {
 };
 
 export default function Contact({ contact, isTablet }: Props) {
+  const socket = useSocketContext();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const token = user.access_token;
@@ -25,7 +27,10 @@ export default function Contact({ contact, isTablet }: Props) {
     token,
   };
   const createConversation = async () => {
-    await dispatch(open_create_conversation(values));
+    let newActiveConversation = await dispatch(
+      open_create_conversation(values)
+    );
+    socket.emit("join conversation", newActiveConversation.payload._id);
     dispatch(getCreatedUserConversation(values));
   };
   return (

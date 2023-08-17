@@ -5,10 +5,12 @@ import Input from "./Input";
 import { useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { sendMessage } from "@/redux/features/chatSlice";
+import { useSocketContext } from "@/context/SocketContext";
 
 type Props = {};
 
 export default function ChatActions({}: Props) {
+  const socket = useSocketContext();
   const [showAttachments, setShowAttachments] = useState<boolean>(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,8 +30,9 @@ export default function ChatActions({}: Props) {
   const sendMessageOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    await dispatch(sendMessage(values));
-
+    let newMsg = await dispatch(sendMessage(values));
+    //sending the whole msg (includes conversation infos, message text and also sender's info and files)
+    socket.emit("send message", newMsg.payload);
     setMessage("");
     setLoading(false);
   };

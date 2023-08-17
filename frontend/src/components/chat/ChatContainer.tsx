@@ -32,7 +32,7 @@ export default function ChatContainer({
       dispatch(getConversationMessages(values));
     }
   }, [activeConversation]);
-  console.log("messages ::: ", messages);
+  // console.log("messages ::: ", messages);
   return (
     <div
       className={`relative h-full select-none overflow-hidden ${

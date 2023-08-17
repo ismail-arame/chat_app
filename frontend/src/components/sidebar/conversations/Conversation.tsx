@@ -71,8 +71,8 @@ export default function Conversation({ conversation, isTablet }: Props) {
             }`}
           >
             <img
-              src={conversation.picture}
-              alt={conversation.name}
+              src={receiver.picture}
+              alt={receiver.name}
               className="h-full w-full object-cover"
             />
           </div>
@@ -100,7 +100,7 @@ export default function Conversation({ conversation, isTablet }: Props) {
                     24
                   )}...`}</p>
                 ) : !conversation.latestMessage ? (
-                  `Say hi 👋 to ${conversation.name}`
+                  `Say hi 👋 to ${receiver.name}`
                 ) : (
                   <p>{conversation?.latestMessage?.message}</p>
                 )}

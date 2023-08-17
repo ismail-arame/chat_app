@@ -46,6 +46,8 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   logger.info("socket io connected successfully.");
   SocketServer(socket);
+  // const allRooms = io.sockets.adapter.rooms;
+  // console.log("List of all rooms:", allRooms);
 });
 
 const exitHandler = () => {

@@ -164,6 +164,29 @@ export const chatSlice = createSlice({
     setMessages: (state, action: PayloadAction<messageType[]>) => {
       state.messages = action.payload;
     },
+    updateMessagesAndConversations: (
+      state,
+      action: PayloadAction<messageType>
+    ) => {
+      // update the messages only for the appropriate message conversation not any active conversation
+      let convo = state.activeConversation;
+      if (convo._id === action.payload.conversation._id) {
+        state.messages = [...state.messages, action.payload];
+      }
+
+      //update conversations
+      let conversation = {
+        ...action.payload.conversation,
+        latestMessage: action.payload,
+      };
+      //filtering all conversations that are not this conversation
+      const newConvos = [...state.conversations].filter(
+        (c) => c._id !== conversation._id
+      );
+      //add the latest conversation to the beginning
+      newConvos.unshift(conversation);
+      state.conversations = newConvos;
+    },
   },
   extraReducers: (builder) => {
     /* ----- getConversations ----- */
@@ -270,5 +293,9 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { setActiveConversation, setMessages } = chatSlice.actions;
+export const {
+  setActiveConversation,
+  setMessages,
+  updateMessagesAndConversations,
+} = chatSlice.actions;
 export default chatSlice.reducer;
