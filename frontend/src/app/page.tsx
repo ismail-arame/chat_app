@@ -21,6 +21,8 @@ export default function Home() {
   const userId: string = user._id;
   const { activeConversation } = useAppSelector((state) => state.chat);
   const [onlineUsers, setOnlineUsers] = useState<onlineUsersType[]>([]);
+  //typing (contains a conversationId or "") if it contains a convoId that allow us to show typing... in the sidebar for that conversation
+  const [typing, setTyping] = useState<string>("");
 
   //join user into socket io
   useEffect(() => {
@@ -31,12 +33,18 @@ export default function Home() {
     });
   }, [user]);
 
-  //Listening for recieved messages
   useEffect(() => {
+    //Listening for recieved messages
     socket.on("receive message", (message) => {
-      console.log("client recieved message : ", message);
+      // console.log("client recieved message : ", message);
       dispatch(updateMessagesAndConversations(message));
     });
+    //Listening to Typing Events
+    socket.on("typing", (conversationId) => {
+      console.log("typing : ", conversationId);
+      setTyping(conversationId);
+    });
+    socket.on("stop typing", () => setTyping(""));
   }, [user]);
 
   //Get Conversations
@@ -68,6 +76,7 @@ export default function Home() {
             isPhone={isPhone}
             onlineUsers={onlineUsers}
             setOnlineUsers={setOnlineUsers}
+            typing={typing}
           />
         ) : isPhone && activeConversation._id ? (
           <ChatContainer
@@ -76,6 +85,7 @@ export default function Home() {
             isPhone={isPhone}
             isSmallPhone={isSmallPhone}
             onlineUsers={onlineUsers}
+            typing={typing}
           />
         ) : (
           <>
@@ -86,6 +96,7 @@ export default function Home() {
               isPhone={isPhone}
               onlineUsers={onlineUsers}
               setOnlineUsers={setOnlineUsers}
+              typing={typing}
             />
             {/* right side */}
             {activeConversation._id ? (
@@ -95,6 +106,7 @@ export default function Home() {
                 isPhone={isPhone}
                 isSmallPhone={isSmallPhone}
                 onlineUsers={onlineUsers}
+                typing={typing}
               />
             ) : (
               <Welcome

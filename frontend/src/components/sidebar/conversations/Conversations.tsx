@@ -7,9 +7,14 @@ import { checkOnlineStatus, getConversationReceiverId } from "@/utils/chat";
 type Props = {
   isTablet: boolean;
   onlineUsers: onlineUsersType[];
+  typing: string;
 };
 
-export default function Conversations({ isTablet, onlineUsers }: Props) {
+export default function Conversations({
+  isTablet,
+  onlineUsers,
+  typing,
+}: Props) {
   const { conversations } = useAppSelector((state) => state.chat);
   const { user } = useAppSelector((state) => state.user);
   // console.log(conversations);
@@ -30,6 +35,7 @@ export default function Conversations({ isTablet, onlineUsers }: Props) {
                 isTablet={isTablet}
                 key={conversation._id}
                 online={check}
+                typing={typing}
               />
             );
           })}

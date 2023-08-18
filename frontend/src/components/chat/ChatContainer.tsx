@@ -12,6 +12,8 @@ type Props = {
   isPhone: boolean;
   isSmallPhone: boolean;
   onlineUsers: onlineUsersType[];
+  typing: string;
+  // typing: boolean;
 };
 
 export default function ChatContainer({
@@ -20,6 +22,7 @@ export default function ChatContainer({
   isPhone,
   isSmallPhone,
   onlineUsers,
+  typing,
 }: Props) {
   const dispatch = useAppDispatch();
   const { activeConversation, messages } = useAppSelector(
@@ -56,7 +59,7 @@ export default function ChatContainer({
           )}
         />
         {/* *_*_*_*_*_*_*_*_ Chat Messages _*_*_*_*_*_*_*_* */}
-        <ChatMessages />
+        <ChatMessages typing={typing} />
         {/* *_*_*_*_*_*_*_*_ Chat Actions (Input) _*_*_*_*_*_*_*_* */}
         <ChatActions />
       </div>

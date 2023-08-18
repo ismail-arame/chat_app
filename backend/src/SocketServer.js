@@ -8,15 +8,13 @@ SocketServer = (socket, io) => {
     // Join Application room
     socket.join(userId);
 
-    //add joined user to online users
+    /* ************ add joined user to online users ************ */
     if (!onlineUsers.some((user) => user.userId === userId)) {
       console.log(`user ${userId} is now online`);
       onlineUsers.push({ userId: userId, socketId: socket.id });
     }
     //send online users to frontend
     io.emit("get-online-users", onlineUsers);
-    //send socket id
-    // io.emit("setup socket", socket.id);
   });
 
   /* *_*_*_*_*_*_*_*_*_*_* user leaves the application *_*_*_*_*_*_*_*_*_*_* */
@@ -54,6 +52,16 @@ SocketServer = (socket, io) => {
       console.log("user._id -------------> : ", user._id);
       socket.in(user._id).emit("receive message", message);
     });
+  });
+  /* *_*_*_*_*_*_*_*_*_*_* Typing *_*_*_*_*_*_*_*_*_*_* */
+  socket.on("typing", (conversationId) => {
+    console.log("typing in ... ", conversationId);
+    socket.in(conversationId).emit("typing", conversationId);
+  });
+
+  socket.on("stop typing", (conversationId) => {
+    console.log("stopped typing in ... ", conversationId);
+    socket.in(conversationId).emit("stop typing");
   });
 };
 

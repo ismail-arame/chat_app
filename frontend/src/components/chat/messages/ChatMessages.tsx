@@ -3,11 +3,17 @@ import { messageType } from "@/types/messageType";
 import Message from "./Message";
 import { useMediaQuery } from "react-responsive";
 import { useEffect, useRef } from "react";
+import Typing from "./Typing";
 
-type Props = {};
+type Props = {
+  typing: string;
+  // typing: boolean;
+};
 
-export default function ChatMessages({}: Props) {
-  const { messages } = useAppSelector((state) => state.chat);
+export default function ChatMessages({ typing }: Props) {
+  const { messages, activeConversation } = useAppSelector(
+    (state) => state.chat
+  );
   const { user } = useAppSelector((state) => state.user);
   const isPhone = useMediaQuery({
     query: "(max-width: 800px)",
@@ -49,6 +55,8 @@ export default function ChatMessages({}: Props) {
               isSameSenderAsPrevious={message.isSameSenderAsPrevious!}
             />
           ))}
+        {/* checking if typing contains a conversationId or it's "" which is false*/}
+        {typing === activeConversation._id ? <Typing /> : null}
         <div ref={endRef}></div>
       </div>
     </div>

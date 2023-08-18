@@ -35,6 +35,7 @@ export default function ChatActions({}: Props) {
     socket.emit("send message", newMsg.payload);
     setMessage("");
     setLoading(false);
+    socket.emit("stop typing", activeConversation._id);
   };
 
   return (

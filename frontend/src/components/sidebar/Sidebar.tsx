@@ -14,6 +14,7 @@ type Props = {
   isPhone: boolean;
   onlineUsers: onlineUsersType[];
   setOnlineUsers: any;
+  typing: string;
 };
 
 export default function Sidebar({
@@ -22,6 +23,7 @@ export default function Sidebar({
   isPhone,
   onlineUsers,
   setOnlineUsers,
+  typing,
 }: Props) {
   const [searchResults, setSearchResults] = useState([]);
   // console.log(searchResults);
@@ -54,7 +56,11 @@ export default function Sidebar({
       ) : (
         <>
           {/* Conversations */}
-          <Conversations isTablet={isTablet} onlineUsers={onlineUsers} />
+          <Conversations
+            isTablet={isTablet}
+            onlineUsers={onlineUsers}
+            typing={typing}
+          />
         </>
       )}
     </div>

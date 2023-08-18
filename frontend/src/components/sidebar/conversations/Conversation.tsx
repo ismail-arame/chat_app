@@ -11,6 +11,7 @@ type Props = {
   conversation: any;
   isTablet: boolean;
   online: boolean;
+  typing: string;
 };
 
 type valuesType = {
@@ -22,8 +23,8 @@ export default function Conversation({
   conversation,
   isTablet,
   online,
+  typing,
 }: Props) {
-  console.log("online", online);
   const socket = useSocketContext();
   const latestMessageLength: number =
     conversation?.latestMessage?.message?.length;
@@ -102,7 +103,9 @@ export default function Conversation({
               }`}
             >
               <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
-                {shouldTruncate ? (
+                {typing === conversation._id ? (
+                  <p className="text-green_1">Typing...</p>
+                ) : shouldTruncate ? (
                   <p>{`${conversation?.latestMessage?.message.slice(
                     0,
                     24
