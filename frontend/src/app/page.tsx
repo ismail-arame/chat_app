@@ -5,13 +5,19 @@ import { Welcome } from "@/components/chat";
 import { Sidebar } from "@/components/sidebar";
 import {
   getConversations,
+  updateLatestMessageStatusToRead,
+  updateMessageStatus,
+  updateMessageStatusToRead,
   updateMessagesAndConversations,
 } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useSocketContext } from "@/context/SocketContext";
 import { onlineUsersType } from "@/types/onlineUsersType";
+import { conversationType } from "@/types/conversationType";
+import { getConversationReceiverId } from "@/utils/chat";
+import { userType } from "../types/userType";
 
 export default function Home() {
   const socket = useSocketContext();
@@ -20,6 +26,8 @@ export default function Home() {
   const { user } = useAppSelector((state) => state.user);
   const userId: string = user._id;
   const { activeConversation } = useAppSelector((state) => state.chat);
+  const activeConversationRef: any = useRef(null);
+  activeConversationRef.current = activeConversation;
   const [onlineUsers, setOnlineUsers] = useState<onlineUsersType[]>([]);
   //typing (contains a conversationId or "") if it contains a convoId that allow us to show typing... in the sidebar for that conversation
   const [typing, setTyping] = useState<string>("");
@@ -36,15 +44,48 @@ export default function Home() {
   useEffect(() => {
     //Listening for recieved messages
     socket.on("receive message", (message) => {
-      // console.log("client recieved message : ", message);
       dispatch(updateMessagesAndConversations(message));
+
+      const senderId = message.sender._id;
+      const receiverId =
+        message.conversation.users[0]._id === senderId
+          ? message.conversation.users[1]._id
+          : message.conversation.users[0]._id;
+
+      if (
+        activeConversationRef.current?._id === message.conversation._id &&
+        !message.conversation.isGroup
+      ) {
+        // when the reciever is catively chating with the sender we have to emit a socket event to the sender that the reciever has viewed the message and then update the state of the message (messageStatus = "read") in the sender's UI
+        const conversationId = message.conversation._id;
+        socket.emit("seen message", { senderId, receiverId, conversationId });
+        // console.log("status :::: i am fine bro");
+        const values = {
+          token: user?.access_token,
+          status: "read",
+        };
+        // change messageStatus to be read when the receiver is actively chating with a user
+        dispatch(updateMessageStatus(values));
+      }
     });
-    //Listening to Typing Events
+  }, [user]);
+
+  //Listening to Typing Events
+  useEffect(() => {
     socket.on("typing", (conversationId) => {
       console.log("typing : ", conversationId);
       setTyping(conversationId);
     });
     socket.on("stop typing", () => setTyping(""));
+  }, [user]);
+
+  //message seen notification
+  useEffect(() => {
+    socket.on("message seen notification", ({ receiverId, conversationId }) => {
+      // Display a notification or update the UI to indicate the message has been seen.
+      dispatch(updateMessageStatusToRead());
+      dispatch(updateLatestMessageStatusToRead(conversationId));
+    });
   }, [user]);
 
   //Get Conversations

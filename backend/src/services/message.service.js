@@ -35,7 +35,7 @@ exports.populateMessage = async (id) => {
   return populatedMessage;
 };
 
-exports.getConversationMessages = async (conversation_id) => {
+exports.getConversationMessages = async (conversation_id, user_id) => {
   const messages = await MessageModel.find({
     conversation: conversation_id,
   })
@@ -49,6 +49,28 @@ exports.getConversationMessages = async (conversation_id) => {
   if (!messages) {
     throw createHttpError.BadRequest("Something went wrong");
   }
+
+  // make the messages saw by the receiver as messageStatus = "read"
+  let unReadMessages = [];
+
+  messages.forEach((message, index) => {
+    // console.log(
+    //   "message sender is :::: ",
+    //   message.sender._id.toString() === user_id
+    // );
+    if (
+      message.messageStatus !== "read" &&
+      user_id !== message.sender._id.toString()
+    ) {
+      messages[index].messageStatus = "read";
+      unReadMessages.push(message._id);
+    }
+  });
+
+  await MessageModel.updateMany(
+    { _id: { $in: unReadMessages } },
+    { $set: { messageStatus: "read" } }
+  );
 
   return messages;
 };

@@ -49,8 +49,8 @@ export default function ChatMessages({ typing }: Props) {
           messagesWithSenderCheck.length > 0 &&
           messagesWithSenderCheck.map((message: messageType) => (
             <Message
-              message={message}
               key={message._id}
+              message={message}
               senderIsMe={user._id === message.sender._id}
               isSameSenderAsPrevious={message.isSameSenderAsPrevious!}
             />

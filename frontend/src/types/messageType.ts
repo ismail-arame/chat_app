@@ -23,6 +23,7 @@ export type messageType = {
   _id: string;
   sender: senderType;
   message: string;
+  messageStatus: "sent" | "delivered" | "read";
   conversation: conversationType;
   files: any;
   createdAt?: string;

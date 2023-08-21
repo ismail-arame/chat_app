@@ -2,6 +2,7 @@ import { TriangleIcon } from "@/app/svg";
 import { messageType } from "@/types/messageType";
 import moment from "moment";
 import { useMediaQuery } from "react-responsive";
+import MessageStatus from "./MessageStatus";
 
 type Props = {
   message: messageType;
@@ -44,12 +45,19 @@ export default function Message({
           }`}
         >
           {/* Message */}
-          <p className="h-full justify-self-end pr-9 text-[13px]">
+          <p
+            className={`h-full justify-self-end text-[13px] ${
+              senderIsMe ? "pr-[52px]" : "pr-9"
+            }`}
+          >
             {message.message}
           </p>
-          <span className="dark: absolute bottom-[2px] right-1.5 float-right pt-6 text-[11px] text-dark_text_5">
-            {moment(message.createdAt).format("HH:mm")}
-          </span>
+          <div className="dark: absolute bottom-[2px] right-1.5 float-right flex items-center justify-center pt-6 text-[11px] text-dark_text_5">
+            <span>{moment(message.createdAt).format("HH:mm")}</span>
+            {senderIsMe && (
+              <MessageStatus messageStatus={message.messageStatus} />
+            )}
+          </div>
           {/* Triangle */}
           {!senderIsMe && !isSameSenderAsPrevious ? (
             <span>

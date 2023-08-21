@@ -43,6 +43,11 @@ type sendMessageValuesType = {
   files: any;
 };
 
+type updateMessageStatusValuesType = {
+  token: string;
+  status: string;
+};
+
 /* _*_*_*_*_*_*_*_*_*_*_* functions *_*_*_*_*_*_*_*_*_*_* _ */
 
 //get conversations function
@@ -109,7 +114,7 @@ export const open_create_conversation = createAsyncThunk(
 
 // get conversation messages
 export const getConversationMessages = createAsyncThunk(
-  "conversation/",
+  "messages/get",
   async (values: messageEndpointValuesType, { rejectWithValue }) => {
     const { token, conversation_id } = values;
     try {
@@ -152,6 +157,29 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
+// update message status
+export const updateMessageStatus = createAsyncThunk(
+  "message/updateStatus",
+  async (values: updateMessageStatusValuesType, { rejectWithValue }) => {
+    const { token, status } = values;
+    try {
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/message/updateMessageStatus`,
+        {
+          status,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
+
 /* _*_*_*_*_*_*_*_*_*_*_* functions *_*_*_*_*_*_*_*_*_*_* _ */
 
 export const chatSlice = createSlice({
@@ -164,14 +192,44 @@ export const chatSlice = createSlice({
     setMessages: (state, action: PayloadAction<messageType[]>) => {
       state.messages = action.payload;
     },
+    updateMessageStatusToRead: (state) => {
+      const lastIndex = state.messages.length - 1;
+      if (state.messages[lastIndex]) {
+        state.messages[lastIndex].messageStatus = "read";
+      }
+    },
+    updateLatestMessageStatusToRead: (state, action: PayloadAction<string>) => {
+      //update latest message status to read
+      const conversationId = action.payload;
+      const updatedConversations = state.conversations.map((conversation) => {
+        if (conversation._id === conversationId) {
+          return {
+            ...conversation,
+            latestMessage: {
+              ...conversation.latestMessage,
+              messageStatus: "read",
+            },
+          };
+        }
+        return conversation;
+      });
+      state.conversations = updatedConversations;
+    },
     updateMessagesAndConversations: (
       state,
       action: PayloadAction<messageType>
     ) => {
+      // const updatedState = { ...state }; // Create a new state object
       // update the messages only for the appropriate message conversation not any active conversation
       let convo = state.activeConversation;
       if (convo._id === action.payload.conversation._id) {
-        state.messages = [...state.messages, action.payload];
+        //make the messageStatus = "read"
+        const updatedMessage: messageType = {
+          ...action.payload,
+          messageStatus: "read", // Update the messageStatus here
+        };
+        state.messages = [...state.messages, updatedMessage];
+        // updatedState.messages = [...state.messages, updatedMessage];
       }
 
       //update conversations
@@ -185,7 +243,10 @@ export const chatSlice = createSlice({
       );
       //add the latest conversation to the beginning
       newConvos.unshift(conversation);
+      // updatedState.conversations = newConvos;
       state.conversations = newConvos;
+
+      // return updatedState;
     },
   },
   extraReducers: (builder) => {
@@ -290,12 +351,29 @@ export const chatSlice = createSlice({
       state.status = "failed";
       state.error = action.payload as any;
     });
+    /* ----- Update Message Status ----- */
+    builder.addCase(updateMessageStatus.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(
+      updateMessageStatus.fulfilled,
+      (state, action: PayloadAction<messageType>) => {
+        state.status = "succeeded";
+        state.error = "";
+      }
+    );
+    builder.addCase(updateMessageStatus.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as any;
+    });
   },
 });
 
 export const {
   setActiveConversation,
   setMessages,
+  updateMessageStatusToRead,
+  updateLatestMessageStatusToRead,
   updateMessagesAndConversations,
 } = chatSlice.actions;
 export default chatSlice.reducer;

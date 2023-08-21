@@ -1,3 +1,4 @@
+import MessageStatus from "@/components/chat/messages/MessageStatus";
 import { useSocketContext } from "@/context/SocketContext";
 import { open_create_conversation } from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -45,7 +46,10 @@ export default function Conversation({
     let newActiveConversation = await dispatch(
       open_create_conversation(values)
     );
-    socket.emit("join conversation", newActiveConversation.payload._id);
+    let conversationId = newActiveConversation.payload._id;
+    let receiverId = receiver._id;
+    let userId = user._id;
+    socket.emit("join conversation", { conversationId, receiverId, userId });
   };
 
   //getting reciever infos
@@ -113,7 +117,18 @@ export default function Conversation({
                 ) : !conversation.latestMessage ? (
                   `Say hi 👋 to ${receiver.name}`
                 ) : (
-                  <p>{conversation?.latestMessage?.message}</p>
+                  <div className="flex items-center">
+                    {conversation?.latestMessage?.sender?._id === user._id && (
+                      <span className="mr-[3px] self-end">
+                        <MessageStatus
+                          messageStatus={
+                            conversation?.latestMessage?.messageStatus
+                          }
+                        />
+                      </span>
+                    )}
+                    <p>{conversation?.latestMessage?.message}</p>
+                  </div>
                 )}
               </div>
             </div>

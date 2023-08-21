@@ -43,6 +43,7 @@ const io = new Server(server, {
   },
 });
 
+global.onlineUsersBackend = new Map();
 io.on("connection", (socket) => {
   logger.info("socket io connected successfully.");
   SocketServer(socket, io);

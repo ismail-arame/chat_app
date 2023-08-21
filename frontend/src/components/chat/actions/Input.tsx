@@ -36,7 +36,6 @@ export default function Input({ message, setMessage, textRef }: Props) {
       setTyping(false);
     }
   };
-  console.log("message : ", message);
   return (
     <div className="w-full">
       <input

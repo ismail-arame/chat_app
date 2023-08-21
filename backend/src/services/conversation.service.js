@@ -1,5 +1,35 @@
 const createHttpError = require("http-errors");
-const { ConversationModel, UserModel } = require("../models/index");
+const {
+  ConversationModel,
+  UserModel,
+  MessageModel,
+} = require("../models/index");
+
+exports.getConversationById = async (conversationId) => {
+  let conversation = await ConversationModel.findById(conversationId);
+  return conversation;
+};
+
+//to get the reciever id we have to check which is the one contains the sender id and then conclude the reciever id
+//user => senderId and users => conversation.users array
+exports.getConversationReceiverId = (user, users) => {
+  //convert this array of new ObjectId to an array of strings
+  /* conversation.users = [
+    new ObjectId("64ad1ac0474df13119b5690c"),
+    new ObjectId("64b70cd9810fc6bab18f930e")
+  ]
+  */
+
+  const conversationUsersStringIdArray = users.map((objectId) =>
+    objectId.toString()
+  );
+
+  /* [ conversationUsersStringIdArray = '64ad1ac0474df13119b5690c', '64b70cd9810fc6bab18f930e' ]*/
+
+  return conversationUsersStringIdArray[0] === user
+    ? conversationUsersStringIdArray[1]
+    : conversationUsersStringIdArray[0];
+};
 
 exports.doesConversationExist = async (sender_id, receiver_id) => {
   //using $and to query based on 2 conditions :
@@ -54,6 +84,16 @@ exports.populateConversation = async (id, fieldToPopulate, fieldToRemove) => {
 };
 
 exports.getUserConversations = async (user_id) => {
+  //update message's status from sent to delivered when the user is online (only in non Group convos)
+  await MessageModel.updateMany(
+    {
+      messageStatus: "sent",
+      sender: { $ne: user_id }, // Exclude documents where sender is user_id
+    },
+    {
+      $set: { messageStatus: "delivered" },
+    }
+  );
   let conversations;
   //we will search in every conversation model document and if the user_id exist in the users array that means that this user belong to this conversation (private or group)
   await ConversationModel.find({

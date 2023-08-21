@@ -12,6 +12,11 @@ const messageSchema = mongoose.Schema(
       trim: true,
       //not required because we may pass picture or files without text
     },
+    messageStatus: {
+      type: String,
+      enum: ["sent", "delivered", "read"],
+      default: "sent", // Set the default value to "sent"
+    },
     // this message belong to a certain conversation
     conversation: {
       type: ObjectId,

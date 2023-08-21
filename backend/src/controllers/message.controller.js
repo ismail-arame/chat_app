@@ -5,7 +5,12 @@ const {
   populateMessage,
   getConversationMessages,
 } = require("../services/message.service");
-const { updatedLatestMessage } = require("../services/conversation.service");
+const {
+  updatedLatestMessage,
+  getConversationById,
+  getConversationReceiverId,
+} = require("../services/conversation.service");
+const { MessageModel } = require("../models");
 
 exports.sendMessage = async (req, res, next) => {
   try {
@@ -18,9 +23,21 @@ exports.sendMessage = async (req, res, next) => {
       throw createHttpError.BadRequest("Something went wrong");
     }
 
+    const conversation = await getConversationById(conversation_id);
+
+    const reciever_id = getConversationReceiverId(user_id, conversation.users);
+
+    console.log(
+      "online users backend at controller :::: ",
+      global.onlineUsersBackend
+    );
+
+    const isUserOnline = global.onlineUsersBackend.has(reciever_id);
+
     const messageData = {
       sender: user_id,
       message,
+      messageStatus: isUserOnline ? "delivered" : "sent",
       conversation: conversation_id,
       files: files || [],
     };
@@ -41,14 +58,35 @@ exports.sendMessage = async (req, res, next) => {
 
 exports.getMessages = async (req, res, next) => {
   try {
+    const user_id = req.user.userId;
+    // console.log("userid get Messages", user_id);
     const conversation_id = req.params.conversation_id;
     if (!conversation_id) {
       logger.error("Please add the conversation id in the params");
       throw createHttpError.BadRequest("Something went wrong");
     }
 
-    const messages = await getConversationMessages(conversation_id);
+    const messages = await getConversationMessages(conversation_id, user_id);
     res.send(messages);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateMessageStatus = async (req, res, next) => {
+  try {
+    const user_id = req.user.userId;
+    const { status } = req.body;
+    console.log("status ::: ", status, user_id);
+    await MessageModel.updateMany(
+      {
+        messageStatus: { $ne: status },
+        sender: { $ne: user_id }, // Exclude documents where sender is user_id
+      },
+      {
+        $set: { messageStatus: status },
+      }
+    );
   } catch (error) {
     next(error);
   }
