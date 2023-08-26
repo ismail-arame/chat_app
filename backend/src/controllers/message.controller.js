@@ -87,6 +87,22 @@ exports.updateMessageStatus = async (req, res, next) => {
         $set: { messageStatus: status },
       }
     );
+    res.send("done");
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getUnReadConversationMessages = async (req, res, next) => {
+  try {
+    const user_id = req.user.userId;
+    const conversation_id = req.params.conversation_id;
+    const unReadMessages = await MessageModel.find({
+      conversation: conversation_id,
+      messageStatus: { $ne: "read" },
+      sender: { $ne: user_id },
+    });
+    res.send(unReadMessages);
   } catch (error) {
     next(error);
   }

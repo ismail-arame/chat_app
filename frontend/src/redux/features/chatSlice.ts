@@ -180,6 +180,26 @@ export const updateMessageStatus = createAsyncThunk(
   }
 );
 
+// update message status
+export const getUnReadConversationMessages = createAsyncThunk(
+  "message/getunReadMessages",
+  async (values: messageEndpointValuesType, { rejectWithValue }) => {
+    const { token, conversation_id } = values;
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/message/getUnReadConversationMessages/${conversation_id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
+
 /* _*_*_*_*_*_*_*_*_*_*_* functions *_*_*_*_*_*_*_*_*_*_* _ */
 
 export const chatSlice = createSlice({
@@ -192,11 +212,33 @@ export const chatSlice = createSlice({
     setMessages: (state, action: PayloadAction<messageType[]>) => {
       state.messages = action.payload;
     },
+    updateConversationUnReadMessages: (
+      state,
+      action: PayloadAction<conversationType>
+    ) => {
+      //empty unreadMessages when i user views them (opens the conversation)
+      state.conversations = state.conversations.map((conversation) => {
+        if (action.payload._id === conversation._id) {
+          return {
+            ...conversation,
+            unreadMessages: [],
+          };
+        }
+        return conversation;
+      });
+    },
     updateMessageStatusToRead: (state) => {
-      const lastIndex = state.messages.length - 1;
-      if (state.messages[lastIndex]) {
-        state.messages[lastIndex].messageStatus = "read";
+      //when the sender sends message or multiple and keeps the chat open and the reciever after this opens the chat and see the messages
+      //we here make all the messages status "read"
+      const reversedMessagesState = state.messages.reverse();
+      for (const message of reversedMessagesState) {
+        if (message.messageStatus !== "read") {
+          message.messageStatus = "read"; // Mark the message as "read"
+        } else {
+          break; // Exit the loop if a "read" message is encountered
+        }
       }
+      state.messages = reversedMessagesState.reverse();
     },
     updateLatestMessageStatusToRead: (state, action: PayloadAction<string>) => {
       //update latest message status to read
@@ -233,16 +275,40 @@ export const chatSlice = createSlice({
       }
 
       //update conversations
-      let conversation = {
-        ...action.payload.conversation,
-        latestMessage: action.payload,
-      };
+      let myconversation: any;
+      if (state.conversations.length > 0) {
+        state.conversations.forEach((conversation) => {
+          if (action.payload.conversation._id === conversation._id) {
+            const unreadMessages = conversation.unreadMessages || [];
+            if (convo._id !== action.payload.conversation._id) {
+              myconversation = {
+                ...action.payload.conversation,
+                unreadMessages: [...unreadMessages, action.payload],
+                latestMessage: action.payload,
+              };
+            } else {
+              myconversation = {
+                ...action.payload.conversation,
+                unreadMessages: [],
+                latestMessage: action.payload,
+              };
+            }
+          }
+        });
+      } else {
+        myconversation = {
+          ...action.payload.conversation,
+          unreadMessages: [action.payload],
+          latestMessage: action.payload,
+        };
+      }
+
       //filtering all conversations that are not this conversation
       const newConvos = [...state.conversations].filter(
-        (c) => c._id !== conversation._id
+        (c) => c._id !== myconversation._id
       );
       //add the latest conversation to the beginning
-      newConvos.unshift(conversation);
+      newConvos.unshift(myconversation);
       // updatedState.conversations = newConvos;
       state.conversations = newConvos;
 
@@ -366,12 +432,42 @@ export const chatSlice = createSlice({
       state.status = "failed";
       state.error = action.payload as any;
     });
+    /* ----- Get UnRead Conversation Messages ----- */
+    builder.addCase(getUnReadConversationMessages.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(
+      getUnReadConversationMessages.fulfilled,
+      (state, action: PayloadAction<any>) => {
+        state.status = "succeeded";
+        state.error = "";
+        //putting the unread messages in the appropriate conversation state object
+        state.conversations = state.conversations.map((conversation) => {
+          if (
+            action.payload &&
+            action.payload.length > 0 &&
+            action.payload[0].conversation === conversation._id
+          ) {
+            return {
+              ...conversation,
+              unreadMessages: action.payload,
+            };
+          }
+          return conversation;
+        });
+      }
+    );
+    builder.addCase(getUnReadConversationMessages.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as any;
+    });
   },
 });
 
 export const {
   setActiveConversation,
   setMessages,
+  updateConversationUnReadMessages,
   updateMessageStatusToRead,
   updateLatestMessageStatusToRead,
   updateMessagesAndConversations,

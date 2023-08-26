@@ -1,5 +1,4 @@
 import { latestMessageType } from "./messageType";
-import { usersType } from "./userType";
 
 export type conversationType = {
   _id: string;
@@ -7,6 +6,7 @@ export type conversationType = {
   picture: string;
   isGroup: boolean;
   users: any;
+  unreadMessages?: any;
   createdAt?: string;
   updatedAt?: string;
   __v?: number;

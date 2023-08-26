@@ -41,6 +41,7 @@ exports.create_open_conversation = async (req, res, next) => {
         picture: receiver_user.picture,
         isGroup: false,
         users: [sender_id, receiver_id],
+        unreadMessages: [],
       };
 
       const newConversation = await createConversation(conversationData);

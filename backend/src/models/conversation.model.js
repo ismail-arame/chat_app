@@ -28,6 +28,12 @@ const conversationSchema = mongoose.Schema(
       type: ObjectId,
       ref: "MessageModel",
     },
+    unreadMessages: [
+      {
+        type: ObjectId,
+        ref: "MessageModel",
+      },
+    ],
     admin: {
       type: ObjectId,
       ref: "UserModel",

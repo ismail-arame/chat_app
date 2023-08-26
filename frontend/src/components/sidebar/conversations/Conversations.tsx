@@ -16,6 +16,7 @@ export default function Conversations({
   typing,
 }: Props) {
   const { conversations } = useAppSelector((state) => state.chat);
+  console.log("conversations first : ", conversations);
   const { user } = useAppSelector((state) => state.user);
   // console.log(conversations);
   return (

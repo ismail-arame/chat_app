@@ -15,9 +15,6 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useSocketContext } from "@/context/SocketContext";
 import { onlineUsersType } from "@/types/onlineUsersType";
-import { conversationType } from "@/types/conversationType";
-import { getConversationReceiverId } from "@/utils/chat";
-import { userType } from "../types/userType";
 
 export default function Home() {
   const socket = useSocketContext();
@@ -44,6 +41,8 @@ export default function Home() {
   useEffect(() => {
     //Listening for recieved messages
     socket.on("receive message", (message) => {
+      console.log("recieved message: ", message);
+      //update unreadMessages array inside conversation realtime
       dispatch(updateMessagesAndConversations(message));
 
       const senderId = message.sender._id;

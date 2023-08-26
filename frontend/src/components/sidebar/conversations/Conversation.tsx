@@ -1,12 +1,17 @@
 import MessageStatus from "@/components/chat/messages/MessageStatus";
 import { useSocketContext } from "@/context/SocketContext";
-import { open_create_conversation } from "@/redux/features/chatSlice";
+import {
+  getUnReadConversationMessages,
+  open_create_conversation,
+  updateConversationUnReadMessages,
+} from "@/redux/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userType } from "@/types/userType";
 import { getConversationReceiverId } from "@/utils/chat";
 import { dateHandler } from "@/utils/date";
 import { capitalize } from "@/utils/string";
 import moment from "moment";
+import { useEffect } from "react";
 
 type Props = {
   conversation: any;
@@ -41,6 +46,14 @@ export default function Conversation({
     receiver_id: getConversationReceiverId(user, conversation.users),
     token,
   };
+  const values2 = {
+    token,
+    conversation_id: conversation._id,
+  };
+  useEffect(() => {
+    dispatch(getUnReadConversationMessages(values2));
+    // console.log("conversation unread data:  ", data);
+  }, []);
   // console.log("conversation : ", conversation);
   const openConversation = async () => {
     let newActiveConversation = await dispatch(
@@ -50,6 +63,8 @@ export default function Conversation({
     let receiverId = receiver._id;
     let userId = user._id;
     socket.emit("join conversation", { conversationId, receiverId, userId });
+    //empty unreadMessages array of the activeConversation
+    dispatch(updateConversationUnReadMessages(conversation));
   };
 
   //getting reciever infos
@@ -137,7 +152,7 @@ export default function Conversation({
 
         {/* Right */}
         <div
-          className={`flex flex-col items-end gap-y-4 ${
+          className={`mb-1 flex flex-col items-end gap-y-[10px] ${
             isTablet ? "text-[11px]" : "text-xs"
           }`}
         >
@@ -146,6 +161,12 @@ export default function Conversation({
               ? dateHandler(conversation.latestMessage?.createdAt)
               : ""}
           </span>
+          {conversation.unreadMessages &&
+          conversation.unreadMessages.length > 0 ? (
+            <div className="mb-1 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-green_1 text-[10px] text-dark_bg_1">
+              {conversation.unreadMessages.length}
+            </div>
+          ) : null}
         </div>
       </div>
       {/* Border */}
