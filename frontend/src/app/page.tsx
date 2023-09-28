@@ -21,6 +21,9 @@ export default function Home() {
   // console.log("socket : , ", socket);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { files } = useAppSelector((state) => state.chat);
+  console.log("files : ", files);
+
   const userId: string = user._id;
   const { activeConversation } = useAppSelector((state) => state.chat);
   const activeConversationRef: any = useRef(null);

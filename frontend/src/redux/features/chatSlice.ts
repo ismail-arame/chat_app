@@ -10,6 +10,7 @@ const initialState: {
   activeConversation: conversationType;
   messages: messageType[];
   notifications: any;
+  files: any;
 } = {
   status: "",
   error: "",
@@ -24,6 +25,7 @@ const initialState: {
   },
   messages: [],
   notifications: [],
+  files: [],
 };
 
 type valuesType = {
@@ -314,6 +316,9 @@ export const chatSlice = createSlice({
 
       // return updatedState;
     },
+    addFiles: (state, action: PayloadAction<any>) => {
+      state.files = [...state.files, action.payload];
+    },
   },
   extraReducers: (builder) => {
     /* ----- getConversations ----- */
@@ -471,5 +476,6 @@ export const {
   updateMessageStatusToRead,
   updateLatestMessageStatusToRead,
   updateMessagesAndConversations,
+  addFiles,
 } = chatSlice.actions;
 export default chatSlice.reducer;

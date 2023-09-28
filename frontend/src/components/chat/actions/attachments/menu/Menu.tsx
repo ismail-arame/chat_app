@@ -6,6 +6,8 @@ import {
   PollIcon,
   StickerIcon,
 } from "@/app/svg";
+import PhotoAttachement from "./PhotoAttachement";
+import DocumentAttachement from "./DocumentAttachement";
 
 type Props = {};
 
@@ -22,11 +24,7 @@ export default function Menu({}: Props) {
           <ContactIcon />
         </button>
       </li>
-      <li>
-        <button type="button" className="rounded-full bg-[#5F66CD]">
-          <DocumentIcon />
-        </button>
-      </li>
+      <DocumentAttachement />
       <li>
         <button type="button" className="rounded-full bg-[#D3396D]">
           <CameraIcon />
@@ -37,11 +35,7 @@ export default function Menu({}: Props) {
           <StickerIcon />
         </button>
       </li>
-      <li>
-        <button type="button" className="rounded-full bg-[#BF50CF]">
-          <PhotoIcon />
-        </button>
-      </li>
+      <PhotoAttachement />
     </ul>
   );
 }

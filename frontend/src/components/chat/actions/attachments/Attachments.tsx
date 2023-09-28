@@ -1,5 +1,5 @@
 import { AttachmentIcon } from "@/app/svg";
-import Menu from "./Menu";
+import Menu from "./menu/Menu";
 import { useState } from "react";
 
 type Props = {
