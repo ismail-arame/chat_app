@@ -319,6 +319,9 @@ export const chatSlice = createSlice({
     addFiles: (state, action: PayloadAction<any>) => {
       state.files = [...state.files, action.payload];
     },
+    clearFiles: (state) => {
+      state.files = [];
+    },
   },
   extraReducers: (builder) => {
     /* ----- getConversations ----- */
@@ -373,6 +376,7 @@ export const chatSlice = createSlice({
         state.status = "succeeded";
         state.error = "";
         state.activeConversation = action.payload;
+        state.files = [];
       }
     );
     builder.addCase(open_create_conversation.rejected, (state, action) => {
@@ -477,5 +481,6 @@ export const {
   updateLatestMessageStatusToRead,
   updateMessagesAndConversations,
   addFiles,
+  clearFiles,
 } = chatSlice.actions;
 export default chatSlice.reducer;

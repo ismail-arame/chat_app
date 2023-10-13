@@ -20,8 +20,7 @@ export default function PhotoAttachement({}: Props) {
         file.type !== "image/webp" &&
         file.type !== "image/gif" &&
         file.type !== "video/mp4" &&
-        file.type !== "video/mpeg" &&
-        file.type !== "video/webm"
+        file.type !== "video/mpeg"
       ) {
         files = files.filter((item) => {
           item.name !== file.name;
@@ -61,7 +60,7 @@ export default function PhotoAttachement({}: Props) {
         hidden
         multiple
         ref={inputRef}
-        accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/mpeg,video/webm"
+        accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/mpeg"
         onChange={handleImage}
       />
     </li>

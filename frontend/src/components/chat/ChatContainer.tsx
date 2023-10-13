@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { ChatActions } from "./actions";
 import { onlineUsersType } from "@/types/onlineUsersType";
 import { checkOnlineStatus, getConversationReceiverId } from "@/utils/chat";
+import FilesPreview from "./preview/files/FilesPreview";
 
 type Props = {
   isDesktopOrLaptop: boolean;
@@ -25,7 +26,7 @@ export default function ChatContainer({
   typing,
 }: Props) {
   const dispatch = useAppDispatch();
-  const { activeConversation, messages } = useAppSelector(
+  const { activeConversation, messages, files } = useAppSelector(
     (state) => state.chat
   );
   const { user } = useAppSelector((state) => state.user);
@@ -58,10 +59,16 @@ export default function ChatContainer({
             activeConversation.users
           )}
         />
-        {/* *_*_*_*_*_*_*_*_ Chat Messages _*_*_*_*_*_*_*_* */}
-        <ChatMessages typing={typing} />
-        {/* *_*_*_*_*_*_*_*_ Chat Actions (Input) _*_*_*_*_*_*_*_* */}
-        <ChatActions />
+        {files.length > 0 ? (
+          <FilesPreview />
+        ) : (
+          <>
+            {/* *_*_*_*_*_*_*_*_ Chat Messages _*_*_*_*_*_*_*_* */}
+            <ChatMessages typing={typing} />
+            {/* *_*_*_*_*_*_*_*_ Chat Actions (Input) _*_*_*_*_*_*_*_* */}
+            <ChatActions />
+          </>
+        )}
       </div>
     </div>
   );

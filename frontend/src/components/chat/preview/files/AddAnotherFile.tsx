@@ -1,15 +1,18 @@
-import { DocumentIcon } from "@/app/svg";
+import { CloseIcon } from "@/app/svg";
 import { addFiles } from "@/redux/features/chatSlice";
-import { useRef } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { getFileType } from "@/utils/file";
+import { useRef } from "react";
 
-type Props = {};
+type Props = {
+  activeIndex: number;
+  setActiveIndex: any;
+};
 
-export default function DocumentAttachement({}: Props) {
+export default function AddAnotherFile({ activeIndex, setActiveIndex }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
-  const handleDocument = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const filesHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let files: File[] = Array.from(e.target.files!);
     files.forEach((file) => {
       if (
@@ -27,7 +30,13 @@ export default function DocumentAttachement({}: Props) {
         file.type !==
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
         file.type !==
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
+        file.type !== "image/png" &&
+        file.type !== "image/jpeg" &&
+        file.type !== "image/webp" &&
+        file.type !== "image/gif" &&
+        file.type !== "video/mp4" &&
+        file.type !== "video/mpeg"
       ) {
         files = files.filter((item) => {
           item.name !== file.name;
@@ -43,32 +52,40 @@ export default function DocumentAttachement({}: Props) {
         const reader: FileReader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e) => {
+          // setActiveIndex(activeIndex + 1);
           console.log(file.type);
           const fileData = e.target?.result as string;
-          dispatch(addFiles({ file: file, type: getFileType(file.type) }));
+          dispatch(
+            addFiles({
+              file: file,
+              fileData: getFileType(file.type) === "IMAGE" ? fileData : "",
+              type: getFileType(file.type),
+            })
+          );
         };
       }
     });
   };
   return (
-    <li>
-      <button
-        type="button"
-        className="rounded-full bg-[#5F66CD]"
+    <>
+      <div
+        className="mt-2 flex h-14 w-14 cursor-pointer items-center justify-center rounded-md border dark:border-white"
         onClick={() => {
           if (inputRef.current) inputRef.current.click();
         }}
       >
-        <DocumentIcon />
-      </button>
+        <span className="rotate-45">
+          <CloseIcon className="dark:fill-dark_svg_1" />
+        </span>
+      </div>
       <input
         type="file"
         hidden
         multiple
         ref={inputRef}
-        accept="application/pdf,application/msword,application/msword,application/vnd.ms-powerpoint,application/vnd.rar,application/zip,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,audio/mpeg,audio/wav"
-        onChange={handleDocument}
+        accept="application/pdf,application/msword,application/msword,application/vnd.ms-powerpoint,application/vnd.rar,application/zip,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,image/png,image/jpeg,image/gif,image/webp,video/mp4,video/mpeg,audio/mpeg,audio/wav"
+        onChange={filesHandler}
       />
-    </li>
+    </>
   );
 }
