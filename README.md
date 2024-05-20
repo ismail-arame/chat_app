@@ -56,7 +56,11 @@ DEFAULT_STATUS=Hey there ! I am using whatsapp
 
 [![online.png](https://i.postimg.cc/PxyXvhLj/online.png)](https://postimg.cc/Fdf5wMgW)
 
-### Delivered Sent Read message status : 
+### Sent Delivered Read message status : 
+
+`Sent Status` is shown when a message sent to offile user
+`Delivered Status` is shown when a message is sent to an online user
+`Read Status` is shown when a user reads a message
 
 [![delivered-sent-read.png](https://i.postimg.cc/d0WNhxqf/delivered-sent-read.png)](https://postimg.cc/bGt9MLS0)
 
@@ -74,6 +78,6 @@ DEFAULT_STATUS=Hey there ! I am using whatsapp
 
 [![emojis.png](https://i.postimg.cc/mgp7CfH7/emojis.png)](https://postimg.cc/k28VPHw5)
 
-### select images : 
+### Multiple Image Selection : 
 
 [![select-images.png](https://i.postimg.cc/vmp92rXB/select-images.png)](https://postimg.cc/wtQ77sC8)
