@@ -1,6 +1,6 @@
 ## this project is built using :  
 
-`MERN stack` (Mongodb, Express, React, Nodejs) , `nextjs` for server side rendering and `typescript` for type checking, socketio for realtime communication
+`MERN stack` (Mongodb, Express, React, Nodejs) , `nextjs` for server side rendering and `typescript` for type checking, socketio for realtime communication and `authentication` is done using `JWT` (Json Web Token)
 
 you have to set envirenment varaibles in both frontend and backend in order to make it work perfectly.
 
@@ -47,6 +47,10 @@ DEFAULT_STATUS=Hey there ! I am using whatsapp
 ### Home Page : 
 
 [![home.png](https://i.postimg.cc/qqWG8PYm/home.png)](https://postimg.cc/QKk5Dyj5)
+
+### Logout : 
+
+[![logout.png](https://i.postimg.cc/g2Vf2sL9/logout.png)](https://postimg.cc/pmd00DBk)
 
 ### Messages Design : 
 
