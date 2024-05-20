@@ -2,6 +2,10 @@
 
 `MERN stack` (Mongodb, Express, React, Nodejs) , `nextjs` for server side rendering and `typescript` for type checking, socketio for realtime communication and `authentication` is done using `JWT` (Json Web Token)
 
+## TODO : 
+
+setup docker to run the website in a container
+
 you have to set envirenment varaibles in both frontend and backend in order to make it work perfectly.
 
 ## Frontend : 
